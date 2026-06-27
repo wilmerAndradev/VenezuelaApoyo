@@ -167,17 +167,24 @@ async function colocarMarcadorSolicitud(lat, lng) {
   if (marcadorSolicitud) {
     marcadorSolicitud.setLatLng([lat, lng]);
   } else {
+    // Obtener la gravedad seleccionada para el color
+    const selectGrav = document.getElementById('input-gravedad');
+    const gravedad = selectGrav ? selectGrav.value : 'moderado';
+    let color = "#F59E0B"; // moderado
+    if (gravedad === 'grave') color = "#EF4444";
+    if (gravedad === 'leve') color = "#22C55E";
+
     // Marcador interactivo personalizado
-    const redPin = L.divIcon({
+    const pinIcon = L.divIcon({
       className: 'custom-pin-solicitud',
-      html: `<div class="w-8 h-8 rounded-full bg-[#CF142B] border-2 border-white flex items-center justify-center shadow-lg"><div class="w-2.5 h-2.5 bg-white rounded-full"></div></div>`,
+      html: `<div class="w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white" style="background-color: ${color};"><div class="w-2.5 h-2.5 bg-white rounded-full"></div></div>`,
       iconSize: [32, 32],
       iconAnchor: [16, 32]
     });
 
     marcadorSolicitud = L.marker([lat, lng], {
       draggable: true,
-      icon: redPin
+      icon: pinIcon
     }).addTo(mapaSolicitudInstance);
 
     // Evento de arrastrar marcador
@@ -289,9 +296,9 @@ function renderizarMarcadoresDashboard(solicitudes) {
     if (solicitud.items && solicitud.items.length > 0) {
       itemsHtml = `
         <div class="mt-2 text-xs">
-          <strong class="text-[#F0F0F0]">Necesidades:</strong>
+          <strong class="text-slate-700">Necesidades:</strong>
           <div class="flex flex-wrap gap-1 mt-1">
-            ${solicitud.items.map(i => `<span class="bg-[#2A2A2A] text-white px-2 py-0.5 rounded text-[11px]">${typeof sanitizeHTML !== 'undefined' ? sanitizeHTML(i) : i}</span>`).join('')}
+            ${solicitud.items.map(i => `<span class="bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded text-[11px]">${typeof sanitizeHTML !== 'undefined' ? sanitizeHTML(i) : i}</span>`).join('')}
           </div>
         </div>
       `;
@@ -299,27 +306,42 @@ function renderizarMarcadoresDashboard(solicitudes) {
 
     // Foto si existe
     const fotoHtml = solicitud.foto_url
-      ? `<img src="${solicitud.foto_url}" class="w-full h-24 object-cover rounded-md mt-2 border border-[#2A2A2A]" alt="Foto de la situación">`
+      ? `<img src="${solicitud.foto_url}" class="w-full h-24 object-cover rounded-md mt-2 border border-slate-200" alt="Foto de la situación">`
       : '';
 
     const safeNombre = typeof sanitizeHTML !== 'undefined' ? sanitizeHTML(`${solicitud.nombre} ${solicitud.apellido}`) : `${solicitud.nombre} ${solicitud.apellido}`;
     const safeMotivo = typeof sanitizeHTML !== 'undefined' ? sanitizeHTML(solicitud.motivo.substring(0, 100)) : solicitud.motivo.substring(0, 100);
     const dots = solicitud.motivo.length > 100 ? '...' : '';
 
+    // Teléfono
+    const tlfHtml = solicitud.telefono
+      ? `<div class="text-xs text-slate-500 mt-1">📞 Tel: <a href="tel:${typeof sanitizeHTML !== 'undefined' ? sanitizeHTML(solicitud.telefono) : solicitud.telefono}" class="text-[#003087] font-semibold hover:underline">${typeof sanitizeHTML !== 'undefined' ? sanitizeHTML(solicitud.telefono) : solicitud.telefono}</a></div>`
+      : '';
+
+    // Botón de Google Maps para voluntario
+    const mapsRouteBtn = `
+      <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank" class="w-full text-center bg-[#003087] text-white py-2 px-3 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 mt-3 hover:bg-[#002060] transition-emergency cursor-pointer">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span>🚙 Cómo Llegar</span>
+      </a>
+    `;
+
     const popupHtml = `
-      <div class="p-1 max-w-[240px] text-[#F0F0F0] font-sans">
-        <div class="flex items-center justify-between gap-2 border-b border-[#2A2A2A] pb-1">
-          <span class="text-xs font-bold text-[#9CA3AF]">${tipoLabel}</span>
+      <div class="p-1 max-w-[240px] text-slate-800 font-sans">
+        <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1">
+          <span class="text-xs font-bold text-slate-500">${tipoLabel}</span>
           ${badgeGravedad}
         </div>
         <div class="mt-2">
-          <h4 class="text-sm font-bold text-white m-0 leading-tight">${safeNombre}</h4>
-          <p class="text-xs text-[#9CA3AF] my-1 leading-snug">${safeMotivo}${dots}</p>
+          <h4 class="text-sm font-bold text-slate-900 m-0 leading-tight">${safeNombre}</h4>
+          ${tlfHtml}
+          <p class="text-xs text-slate-500 my-1 leading-snug">${safeMotivo}${dots}</p>
           ${itemsHtml}
           ${fotoHtml}
-          <div class="flex items-center justify-between mt-2 pt-2 border-t border-[#2A2A2A] text-[10px] text-[#9CA3AF]">
+          ${mapsRouteBtn}
+          <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-200 text-[10px] text-slate-400">
             <span>${formatTiempoRelativo(solicitud.created_at)}</span>
-            <button onclick="verDetalleSolicitud('${solicitud.id}')" class="text-[#F5C400] font-bold hover:underline bg-transparent border-none p-0 cursor-pointer text-[11px]">Ver más</button>
+            <button onclick="verDetalleSolicitud('${solicitud.id}')" class="text-[#003087] font-bold hover:underline bg-transparent border-none p-0 cursor-pointer text-[11px]">Ver más</button>
           </div>
         </div>
       </div>
@@ -363,4 +385,23 @@ function centrarMapaEnMarcador(id) {
       item.marker.openPopup();
     }
   }
+}
+
+/**
+ * Cambia el color del pin interactivo en el mapa de registro según la gravedad
+ */
+function actualizarColorPinSolicitud(gravedad) {
+  if (!marcadorSolicitud) return;
+  let color = "#F59E0B"; // moderado
+  if (gravedad === 'grave') color = "#EF4444";
+  if (gravedad === 'leve') color = "#22C55E";
+
+  const newPinIcon = L.divIcon({
+    className: 'custom-pin-solicitud',
+    html: `<div class="w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white" style="background-color: ${color};"><div class="w-2.5 h-2.5 bg-white rounded-full"></div></div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32]
+  });
+  
+  marcadorSolicitud.setIcon(newPinIcon);
 }

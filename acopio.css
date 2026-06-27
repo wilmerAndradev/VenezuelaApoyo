@@ -17,13 +17,13 @@
 
 .card-role:hover, .card-role:focus-within {
   border-color: var(--color-secondary);
-  background-color: #222222;
+  background-color: rgba(245, 196, 0, 0.04); /* Tono amarillo muy suave */
 }
 
 /* Botones Táctiles de Emergencia */
 .btn-emergency-primary {
   background-color: var(--color-primary);
-  color: var(--color-text);
+  color: #FFFFFF;
   font-weight: 700;
   border-radius: 8px;
   display: inline-flex;
@@ -58,13 +58,13 @@
 }
 
 .btn-emergency-secondary:hover {
-  background-color: var(--color-card);
+  background-color: #F1F5F9;
   border-color: var(--color-muted);
 }
 
 .btn-emergency-warning {
   background-color: var(--color-secondary);
-  color: var(--color-bg);
+  color: #0F172A; /* Texto oscuro para legibilidad sobre amarillo */
   font-weight: 700;
   border-radius: 8px;
   display: inline-flex;

@@ -47,6 +47,7 @@ async function crearSolicitud(datos) {
     nombre: datos.nombre.trim(),
     apellido: datos.apellido.trim(),
     cedula: datos.cedula.trim(),
+    telefono: datos.telefono ? datos.telefono.trim() : '', // nuevo campo
     motivo: datos.motivo.trim(),
     gravedad: datos.gravedad, // 'leve' | 'moderado' | 'grave'
     items: datos.items || [], // array de strings
@@ -111,11 +112,10 @@ async function obtenerEstadisticas() {
   const client = getSupabaseClient();
   if (!client) throw new Error("Supabase no inicializado");
 
-  // Hacemos una consulta ligera trayendo solo tipo y gravedad de las activas para procesar localmente
+  // Hacemos una consulta ligera de todas las solicitudes (activas e inactivas)
   const { data, error } = await client
     .from('solicitudes')
-    .select('tipo, gravedad')
-    .eq('activo', true);
+    .select('tipo, gravedad, activo');
 
   if (error) {
     console.error("Error al obtener estadísticas:", error);
@@ -123,20 +123,26 @@ async function obtenerEstadisticas() {
   }
 
   const stats = {
-    total: data.length,
-    centro_acopio: 0,
-    individuo: 0,
-    grave: 0,
-    moderado: 0,
-    leve: 0
+    total: 0,          // Activas totales
+    centro_acopio: 0,  // Activas centros
+    individuo: 0,      // Activas individuos
+    grave: 0,          // Activas graves
+    moderado: 0,       // Activas moderadas
+    leve: 0,           // Activas leves
+    resueltas: 0       // Inactivas totales (resueltas)
   };
 
-  data.forEach(item => {
-    if (stats.hasOwnProperty(item.tipo)) {
-      stats[item.tipo]++;
-    }
-    if (stats.hasOwnProperty(item.gravedad)) {
-      stats[item.gravedad]++;
+  (data || []).forEach(item => {
+    if (item.activo) {
+      stats.total++;
+      if (stats.hasOwnProperty(item.tipo)) {
+        stats[item.tipo]++;
+      }
+      if (stats.hasOwnProperty(item.gravedad)) {
+        stats[item.gravedad]++;
+      }
+    } else {
+      stats.resueltas++;
     }
   });
 

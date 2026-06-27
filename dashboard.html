@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Solicitudes Activas — AcopioVE</title>
-  
+  <title>Panel de Solicitudes — AyudaVenezuela</title>
+
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Consulta en tiempo real el mapa y listado de necesidades de insumos para centros de acopio y personas afectadas por el terremoto en Venezuela.">
-  <meta name="theme-color" content="#0D0D0D">
+  <meta name="description" content="Panel público de solicitudes de ayuda humanitaria activas en Venezuela. Mapa en tiempo real con todos los reportes de emergencia.">
+  <meta name="theme-color" content="#F8FAFC">
+
+  <!-- Vector Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><clipPath id='h'><path d='M12,21.35l-1.45-1.32C5.4,15.36,2,12.28,2,8.5C2,5.42,4.42,3,7.5,3c1.74,0,3.41,0.81,4.5,2.09C13.09,3.81,14.76,3,16.5,3C19.58,3,22,5.42,22,8.5c0,3.78-3.4,6.86-8.55,11.54L12,21.35z' transform='scale(4.2)'/></clipPath><g clip-path='url(%23h)'><rect x='0' y='0' width='100' height='33' fill='%23F5C400'/><rect x='0' y='33' width='100' height='34' fill='%23003087'/><rect x='0' y='67' width='100' height='33' fill='%23CF142B'/></g></svg>">
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  
+
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  
-  <!-- Leaflet MarkerCluster CSS (Para agrupar pines) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 
@@ -27,9 +28,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] }
         }
       }
     }
@@ -40,104 +39,145 @@
   <link rel="stylesheet" href="acopio.css">
 
   <style>
-    body {
-      background-color: #0D0D0D !important;
-      color: #F0F0F0 !important;
+    body { background-color: #F8FAFC !important; color: #0F172A !important; }
+
+    /* Scrollbar suave en Light Mode */
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #F1F5F9; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+    /* Transición suave toast */
+    .toast-active { transform: translateY(0) !important; opacity: 1 !important; }
+
+    /* Leaflet popup Light Mode */
+    .leaflet-popup-content-wrapper {
+      border-radius: 12px !important;
+      border: 1px solid #E2E8F0 !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12) !important;
+      padding: 0 !important;
+      background: #FFFFFF !important;
     }
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #0D0D0D;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #2A2A2A;
-      border-radius: 9999px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #F5C400;
-    }
-    /* Estilos del Toast */
-    .toast-active {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    
-    /* Evitar que Leaflet rompa el diseño oscuro */
-    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-      background-color: #1A1A1A !important;
-      color: #F0F0F0 !important;
-      border: 1px solid #2A2A2A !important;
-      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5) !important;
-    }
-    .leaflet-popup-close-button {
-      color: #9CA3AF !important;
-      font-size: 16px !important;
-      padding: 6px !important;
-    }
-    .leaflet-container {
-      background: #151515 !important;
-    }
+    .leaflet-popup-content { margin: 0 !important; }
+    .leaflet-popup-tip { background: #FFFFFF !important; }
+
+    /* Panel mapa full height */
+    #mapa-dashboard { min-height: 300px; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between font-sans">
+<body class="min-h-screen flex flex-col font-sans antialiased">
 
   <!-- Header -->
-  <header class="border-b border-[#2A2A2A] bg-[#0D0D0D]/90 backdrop-blur-md sticky top-0 z-[1000] px-4 py-3">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="flex flex-col">
-        <a href="index.html" class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-          <span class="text-[#CF142B]">Ayuda</span><span class="text-[#F5C400]">Venezuela</span>
-        </a>
-        <span class="text-[11px] text-[#9CA3AF] tracking-wider uppercase font-medium">Plataforma de respuesta humanitaria</span>
-      </div>
+  <header class="border-b border-[#E2E8F0] bg-white/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <a href="solicitar.html" class="text-xs bg-[#CF142B] text-white px-3 py-1.5 rounded-md hover:bg-[#b01024] transition-emergency min-h-[38px] flex items-center justify-center font-bold">
-          Registrar Solicitud
-        </a>
+        <!-- Logo SVG Corazón Venezuela -->
+        <svg class="w-8 h-8 shrink-0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="logo-heart-dashboard">
+              <path d="M12,21.35l-1.45-1.32C5.4,15.36,2,12.28,2,8.5C2,5.42,4.42,3,7.5,3c1.74,0,3.41,0.81,4.5,2.09C13.09,3.81,14.76,3,16.5,3C19.58,3,22,5.42,22,8.5c0,3.78-3.4,6.86-8.55,11.54L12,21.35z" transform="scale(4.2)" />
+            </clipPath>
+          </defs>
+          <g clip-path="url(#logo-heart-dashboard)">
+            <rect x="0" y="0" width="100" height="33" fill="#F5C400" />
+            <rect x="0" y="33" width="100" height="34" fill="#003087" />
+            <rect x="0" y="67" width="100" height="33" fill="#CF142B" />
+            <circle cx="50" cy="42" r="1.5" fill="white" />
+            <circle cx="43" cy="44" r="1.5" fill="white" />
+            <circle cx="57" cy="44" r="1.5" fill="white" />
+            <circle cx="37" cy="48" r="1.5" fill="white" />
+            <circle cx="63" cy="48" r="1.5" fill="white" />
+            <circle cx="34" cy="54" r="1.5" fill="white" />
+            <circle cx="66" cy="54" r="1.5" fill="white" />
+            <circle cx="50" cy="49" r="1.5" fill="white" />
+          </g>
+        </svg>
+        <div class="flex flex-col">
+          <a href="index.html" class="text-xl font-bold tracking-tight text-slate-900 leading-none">
+            Ayuda<span class="text-[#003087]">Venezuela</span>
+          </a>
+          <span class="text-[10px] text-slate-500 tracking-wider uppercase font-medium mt-0.5">Panel Público de Emergencia</span>
+        </div>
       </div>
+
+      <!-- Header Stats (inline, compactas) -->
+      <div class="hidden md:flex items-center gap-3">
+        <div class="flex items-center gap-1.5 bg-[#F5C400]/10 border border-[#F5C400]/30 px-3 py-1.5 rounded-lg">
+          <span class="w-2 h-2 rounded-full bg-[#F5C400]"></span>
+          <span class="text-xs font-bold text-slate-700"><span id="metric-activas-h">…</span> Activas</span>
+        </div>
+        <div class="flex items-center gap-1.5 bg-[#EF4444]/10 border border-[#EF4444]/30 px-3 py-1.5 rounded-lg">
+          <span class="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse"></span>
+          <span class="text-xs font-bold text-slate-700"><span id="metric-urgentes-h">…</span> SOS</span>
+        </div>
+        <div class="flex items-center gap-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 px-3 py-1.5 rounded-lg">
+          <span class="w-2 h-2 rounded-full bg-[#22C55E]"></span>
+          <span class="text-xs font-bold text-slate-700"><span id="metric-resueltas-h">…</span> Resueltas</span>
+        </div>
+      </div>
+
+      <a href="solicitar.html" class="btn-emergency-primary text-xs px-4 py-2 min-h-[38px] shadow-sm shrink-0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        <span class="hidden sm:inline">Registrar Solicitud</span>
+        <span class="sm:hidden">Registrar</span>
+      </a>
     </div>
   </header>
 
-  <!-- Main Content: Layout partido -->
+  <!-- Métricas Mobile (solo en pantallas pequeñas) -->
+  <div class="md:hidden grid grid-cols-3 gap-2 px-4 py-3 bg-white border-b border-slate-200">
+    <div class="flex flex-col items-center bg-[#F5C400]/10 border border-[#F5C400]/20 rounded-lg p-2">
+      <span class="text-lg font-bold text-slate-900" id="metric-activas-m">…</span>
+      <span class="text-[10px] text-slate-500 text-center leading-tight">Activas</span>
+    </div>
+    <div class="flex flex-col items-center bg-[#EF4444]/10 border border-[#EF4444]/20 rounded-lg p-2">
+      <span class="text-lg font-bold text-slate-900" id="metric-urgentes-m">…</span>
+      <span class="text-[10px] text-slate-500 text-center leading-tight">SOS</span>
+    </div>
+    <div class="flex flex-col items-center bg-[#22C55E]/10 border border-[#22C55E]/20 rounded-lg p-2">
+      <span class="text-lg font-bold text-slate-900" id="metric-resueltas-m">…</span>
+      <span class="text-[10px] text-slate-500 text-center leading-tight">Resueltas</span>
+    </div>
+  </div>
+
+  <!-- Main Content: Layout partido Mapa | Lista -->
   <main class="flex-1 flex flex-col lg:flex-row w-full max-w-7xl mx-auto px-4 py-4 gap-4 overflow-hidden lg:h-[calc(100vh-140px)]">
-    
+
     <!-- LADO IZQUIERDO: Mapa y Filtros -->
     <div class="flex-1 flex flex-col gap-4">
-      
-      <!-- Controles de búsqueda y filtros rápidos -->
-      <section class="bg-[#1A1A1A] border border-[#2A2A2A] p-4 rounded-xl shadow-md space-y-3">
+
+      <!-- Buscador y Filtros rápidos -->
+      <section class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm space-y-3">
         <div class="flex flex-col md:flex-row gap-3">
-          
-          <!-- Buscador de texto -->
+
+          <!-- Buscador -->
           <div class="flex-1 relative">
-            <input type="text" id="search-input" class="w-full p-2.5 pl-9 rounded-lg border bg-[#0D0D0D] border-[#2A2A2A] text-sm text-white" placeholder="Buscar por insumo, motivo o nombre...">
-            <div class="absolute left-3 top-3.5 text-[#9CA3AF]">
-              <!-- Lupa SVG -->
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" id="search-input" class="w-full p-2.5 pl-9 rounded-lg border border-slate-200 bg-white text-sm text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-[#003087]/20 focus:border-[#003087] outline-none" placeholder="Buscar por insumo, motivo o nombre...">
+            <div class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
           </div>
 
-          <!-- Filtros de Tipo y Gravedad -->
+          <!-- Filtros Tipo y Gravedad -->
           <div class="flex flex-wrap gap-2">
-            <select id="filter-tipo" class="p-2.5 rounded-lg border bg-[#0D0D0D] border-[#2A2A2A] text-xs font-semibold text-white">
+            <select id="filter-tipo" class="p-2.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-[#003087]/20 focus:border-[#003087] outline-none">
               <option value="todos">📦 Todos los Roles</option>
               <option value="centro_acopio">🏡 Centros de Acopio</option>
               <option value="individuo">🚨 Emergencias Individuales</option>
             </select>
-
-            <select id="filter-gravedad" class="p-2.5 rounded-lg border bg-[#0D0D0D] border-[#2A2A2A] text-xs font-semibold text-white">
+            <select id="filter-gravedad" class="p-2.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-[#003087]/20 focus:border-[#003087] outline-none">
               <option value="todos">🔥 Toda Gravedad</option>
               <option value="grave">🔴 Grave / SOS</option>
               <option value="moderado">🟡 Moderado</option>
               <option value="leve">🟢 Leve</option>
             </select>
           </div>
-
         </div>
 
-        <!-- Indicador de total y estado realtime -->
-        <div class="flex justify-between items-center text-xs text-[#9CA3AF] border-t border-[#2A2A2A]/50 pt-2">
+        <!-- Estado realtime + contador -->
+        <div class="flex justify-between items-center text-xs text-slate-500 border-t border-slate-100 pt-2">
           <div class="flex items-center gap-1.5">
             <span class="flex h-2 w-2 relative">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -145,136 +185,147 @@
             </span>
             <span id="realtime-status-text">Escuchando cambios en vivo</span>
           </div>
-          <div id="stats-total" class="font-medium text-white">
-            Cargando...
-          </div>
+          <div id="stats-total" class="font-semibold text-slate-700">Cargando...</div>
         </div>
       </section>
 
-      <!-- Div del mapa Leaflet -->
-      <section class="flex-1 min-h-[300px] border border-[#2A2A2A] rounded-xl overflow-hidden relative shadow-inner">
-        <div id="mapa-dashboard" class="w-full h-full z-0"></div>
+      <!-- Mapa Leaflet -->
+      <section class="flex-1 min-h-[300px] border border-slate-200 rounded-xl overflow-hidden relative shadow-sm bg-slate-100">
+        <div id="mapa-dashboard" class="w-full h-full z-0" style="min-height: 300px;"></div>
+        <!-- Loading overlay del mapa -->
+        <div id="mapa-loading" class="absolute inset-0 bg-slate-100 flex flex-col items-center justify-center z-10">
+          <div class="w-8 h-8 border-4 border-slate-300 border-t-[#003087] rounded-full animate-spin mb-3"></div>
+          <span class="text-xs text-slate-500">Cargando mapa...</span>
+        </div>
       </section>
-
     </div>
 
-    <!-- LADO DERECHO: Tarjetas de requerimientos -->
-    <div class="w-full lg:w-96 flex flex-col h-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl overflow-hidden shadow-md">
-      
-      <div class="p-4 border-b border-[#2A2A2A] bg-[#1A1A1A]">
-        <h2 class="text-base font-bold text-white flex items-center justify-between">
+    <!-- LADO DERECHO: Lista de tarjetas -->
+    <div class="w-full lg:w-96 flex flex-col bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+
+      <div class="p-4 border-b border-slate-200 bg-white">
+        <h2 class="text-base font-bold text-slate-900 flex items-center justify-between">
           <span>Solicitudes Activas</span>
-          <span id="badge-contador-lista" class="bg-[#2A2A2A] text-[#F5C400] text-xs px-2 py-0.5 rounded font-mono">0</span>
+          <span id="badge-contador-lista" class="bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded font-mono border border-slate-200">0</span>
         </h2>
       </div>
 
-      <!-- Listado con scroll interno en Desktop -->
+      <!-- Listado con scroll interno -->
       <div id="contenedor-lista-solicitudes" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar max-h-[500px] lg:max-h-none">
-        <!-- Rellenado dinámicamente -->
-        <div class="text-center py-10 text-[#9CA3AF] text-sm">
-          Cargando listado de solicitudes...
+        <div class="text-center py-10 text-slate-400 text-sm">
+          Cargando solicitudes...
         </div>
       </div>
-
     </div>
 
   </main>
 
-  <!-- Modal Detalle Completo -->
-  <div id="modal-detalle" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden px-4">
-    <div class="bg-[#1A1A1A] border-2 border-[#2A2A2A] rounded-xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      
+  <!-- ======= MODAL DETALLE COMPLETO ======= -->
+  <div id="modal-detalle" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden px-4">
+    <div class="bg-white border border-slate-200 rounded-xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+
       <!-- Header Modal -->
-      <div class="p-4 border-b border-[#2A2A2A] flex items-center justify-between bg-[#1A1A1A]">
-        <span id="detail-tipo" class="text-xs font-bold text-[#F5C400]">🏡 Centro de Acopio</span>
-        <button onclick="cerrarModalDetalle()" class="text-[#9CA3AF] hover:text-white p-1 rounded-full bg-[#0D0D0D] border border-[#2A2A2A]">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-white">
+        <span id="detail-tipo" class="text-xs font-bold text-[#003087] uppercase tracking-wider">🏡 Centro de Acopio</span>
+        <button onclick="cerrarModalDetalle()" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-full bg-slate-100 border border-slate-200 transition-emergency" aria-label="Cerrar modal">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
 
-      <!-- Body Modal (Scrollable) -->
-      <div class="p-6 overflow-y-auto space-y-4 custom-scrollbar text-[#F0F0F0] text-sm">
-        
+      <!-- Body Modal -->
+      <div class="p-6 overflow-y-auto space-y-5 custom-scrollbar text-sm">
+
         <div class="flex items-start justify-between gap-4">
-          <h2 id="detail-nombre-completo" class="text-xl font-bold text-white leading-tight">Juan Pérez</h2>
+          <h2 id="detail-nombre-completo" class="text-xl font-bold text-slate-900 leading-tight">Juan Pérez</h2>
           <div id="detail-gravedad-badge">
             <span class="badge-severe">GRAVE</span>
           </div>
         </div>
 
-        <div>
-          <label class="block text-[10px] text-[#9CA3AF] uppercase font-bold tracking-wider mb-0.5">Descripción de la situación</label>
-          <p id="detail-motivo" class="text-[#F0F0F0] leading-relaxed bg-[#0D0D0D] p-3 border border-[#2A2A2A] rounded-lg text-sm whitespace-pre-line">
-            Motivo detallado...
-          </p>
-        </div>
-
-        <div id="detail-items-container">
-          <label class="block text-[10px] text-[#9CA3AF] uppercase font-bold tracking-wider mb-1.5">Insumos Solicitados</label>
-          <div id="detail-items-list" class="flex flex-wrap gap-1.5">
-            <!-- Items dinamicos -->
-          </div>
-        </div>
-
-        <div id="detail-foto-container" class="hidden">
-          <label class="block text-[10px] text-[#9CA3AF] uppercase font-bold tracking-wider mb-1">Foto de soporte</label>
-          <a href="#" id="detail-foto-link" target="_blank">
-            <img id="detail-foto" src="" class="w-full h-48 object-cover rounded-lg border border-[#2A2A2A]" alt="Imagen de la situación">
+        <!-- Teléfono -->
+        <div id="detail-telefono-container" class="hidden">
+          <label class="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Teléfono de Contacto</label>
+          <a id="detail-telefono-link" href="tel:" class="inline-flex items-center gap-2 text-[#003087] font-bold text-sm hover:underline">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <span id="detail-telefono-texto"></span>
           </a>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#0D0D0D]/50 p-3 border border-[#2A2A2A] rounded-lg">
-          <div>
-            <label class="block text-[10px] text-[#9CA3AF] uppercase font-bold mb-0.5">Cédula del Responsable</label>
-            <span id="detail-cedula" class="font-mono text-white text-xs">V-12345678</span>
-          </div>
-          <div>
-            <label class="block text-[10px] text-[#9CA3AF] uppercase font-bold mb-0.5">Fecha Reporte</label>
-            <span id="detail-fecha" class="text-white text-xs">27-06-2026</span>
+        <!-- Descripción / Motivo -->
+        <div>
+          <label class="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Descripción de la situación</label>
+          <p id="detail-motivo" class="text-slate-700 leading-relaxed bg-slate-50 p-3 border border-slate-200 rounded-lg text-sm whitespace-pre-line">Motivo detallado...</p>
+        </div>
+
+        <!-- Insumos solicitados -->
+        <div id="detail-items-container">
+          <label class="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1.5">Insumos Solicitados</label>
+          <div id="detail-items-list" class="flex flex-wrap gap-1.5">
+            <!-- Items dinámicos -->
           </div>
         </div>
 
+        <!-- Foto -->
+        <div id="detail-foto-container" class="hidden">
+          <label class="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">Foto de soporte</label>
+          <a href="#" id="detail-foto-link" target="_blank">
+            <img id="detail-foto" src="" class="w-full h-48 object-cover rounded-lg border border-slate-200" alt="Imagen de la situación">
+          </a>
+        </div>
+
+        <!-- Datos del responsable -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-3 border border-slate-200 rounded-lg">
+          <div>
+            <label class="block text-[10px] text-slate-400 uppercase font-bold mb-0.5">Cédula del Responsable</label>
+            <span id="detail-cedula" class="font-mono text-slate-800 text-xs">V-12345678</span>
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-400 uppercase font-bold mb-0.5">Fecha Reporte</label>
+            <span id="detail-fecha" class="text-slate-800 text-xs">27-06-2026</span>
+          </div>
+        </div>
+
+        <!-- Dirección -->
         <div>
-          <label class="block text-[10px] text-[#9CA3AF] uppercase font-bold tracking-wider mb-0.5">Dirección y Puntos de Referencia</label>
-          <p id="detail-direccion" class="text-[#F0F0F0] leading-relaxed text-sm"></p>
+          <label class="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Dirección y Puntos de Referencia</label>
+          <p id="detail-direccion" class="text-slate-700 leading-relaxed text-sm"></p>
         </div>
 
       </div>
 
-      <!-- Footer Modal -->
-      <div class="p-4 border-t border-[#2A2A2A] bg-[#1A1A1A] flex gap-3">
+      <!-- Footer Modal: Acciones -->
+      <div class="p-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row gap-3">
+        <!-- Botón GPS Google Maps -->
+        <a id="btn-modal-maps" href="#" target="_blank" class="btn-emergency-primary flex-1 py-2.5 text-xs font-bold flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          🚙 Cómo Llegar
+        </a>
+        <!-- Botón Centrar en mapa -->
         <button type="button" id="btn-modal-centrar" class="btn-emergency-warning flex-1 py-2.5 text-xs font-bold flex items-center justify-center gap-2">
-          <!-- Icono Pin -->
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-          Centrar en Mapa
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+          Ver en Mapa
         </button>
-        <button type="button" onclick="cerrarModalDetalle()" class="btn-emergency-secondary flex-1 py-2.5 text-xs font-bold">
+        <button type="button" onclick="cerrarModalDetalle()" class="btn-emergency-secondary py-2.5 text-xs font-bold flex items-center justify-center px-4 bg-white">
           Cerrar
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- Contenedor flotante de notificaciones TOAST en tiempo real (Esquina inferior derecha) -->
-  <div id="toast-container" class="fixed bottom-4 right-4 z-[9999] max-w-sm w-full pointer-events-none flex flex-col gap-2">
-    <!-- Toasts dinámicos aquí -->
-  </div>
+  <!-- Toast container (notificaciones en tiempo real) -->
+  <div id="toast-container" class="fixed bottom-4 right-4 z-[9999] max-w-sm w-full pointer-events-none flex flex-col gap-2"></div>
 
   <!-- Footer -->
-  <footer class="border-t border-[#2A2A2A] bg-[#0D0D0D] px-4 py-4 text-center">
+  <footer class="border-t border-[#E2E8F0] bg-white px-4 py-4 text-center">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="text-xs text-[#9CA3AF]">
-        &copy; 2026 Ecosistema <strong>AyudaVenezuela</strong>. Iniciativa humanitaria en emergencia.
-      </div>
+      <div class="text-xs text-slate-500">&copy; 2026 Ecosistema <strong>AyudaVenezuela</strong>. Iniciativa humanitaria en emergencia.</div>
+      <a href="index.html" class="text-xs text-[#003087] font-semibold hover:underline">← Volver al inicio</a>
     </div>
   </footer>
 
-  <!-- Scripts: CDNs, Config, Supabase, Leaflet y Mapa logic -->
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <!-- Plugin MarkerCluster de Leaflet (Para agrupar pines en 3G) -->
   <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-  
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="config.js"></script>
   <script src="supabase.js"></script>
@@ -282,159 +333,149 @@
   <script src="app.js"></script>
 
   <script>
-    // Memoria en cliente para todas las solicitudes y los filtros
     let todasLasSolicitudes = [];
     let solicitudesFiltradas = [];
 
     document.addEventListener("DOMContentLoaded", async () => {
-      // 1. Inicializar cliente Supabase
+      // 1. Inicializar Supabase
       initSupabase();
 
-      // 2. Cargar solicitudes iniciales
+      // 2. Inicializar mapa inmediatamente (sin datos, para evitar pantalla negra)
+      iniciarMapaDashboard('mapa-dashboard', []);
+      document.getElementById('mapa-loading').classList.add('hidden');
+
+      // 3. Cargar datos de Supabase de forma asíncrona
       await cargarYRenderizarDatos();
 
-      // 3. Suscribirse a Realtime de Supabase
+      // 4. Cargar estadísticas de cabecera
+      await cargarMetricas();
+
+      // 5. Suscribir Realtime
       configurarRealtime();
 
-      // 4. Agregar listeners para los filtros y buscador
+      // 6. Listeners de filtros
       document.getElementById('filter-tipo').addEventListener('change', aplicarFiltros);
       document.getElementById('filter-gravedad').addEventListener('change', aplicarFiltros);
-      
-      const searchInput = document.getElementById('search-input');
-      searchInput.addEventListener('input', aplicarFiltros);
+      document.getElementById('search-input').addEventListener('input', aplicarFiltros);
     });
 
     /**
-     * Trae los datos de Supabase e inicializa el mapa y la lista
+     * Carga estadísticas para los badges del header y métricas mobile
+     */
+    async function cargarMetricas() {
+      try {
+        const stats = await obtenerEstadisticas();
+        // Header (desktop)
+        document.getElementById('metric-activas-h').innerText = stats.total;
+        document.getElementById('metric-urgentes-h').innerText = stats.grave;
+        document.getElementById('metric-resueltas-h').innerText = stats.resueltas;
+        // Mobile metrics
+        document.getElementById('metric-activas-m').innerText = stats.total;
+        document.getElementById('metric-urgentes-m').innerText = stats.grave;
+        document.getElementById('metric-resueltas-m').innerText = stats.resueltas;
+      } catch (e) {
+        console.error("Error cargando métricas:", e);
+      }
+    }
+
+    /**
+     * Trae solicitudes activas de Supabase y renderiza mapa + lista
      */
     async function cargarYRenderizarDatos() {
       try {
         todasLasSolicitudes = await obtenerSolicitudes();
-        
-        // Inicializar filtros activos
         solicitudesFiltradas = [...todasLasSolicitudes];
-
-        // Iniciar mapa Leaflet con la lista
-        iniciarMapaDashboard('mapa-dashboard', solicitudesFiltradas);
-        
-        // Dibujar el listado de cards
+        // Actualizar marcadores del mapa con los datos reales
+        actualizarMarcadores(solicitudesFiltradas);
+        // Dibujar listado lateral
         renderListaCards(solicitudesFiltradas);
-
       } catch (err) {
         console.error("Error al cargar datos del dashboard:", err);
         document.getElementById('contenedor-lista-solicitudes').innerHTML = `
-          <div class="text-center py-10 text-[#EF4444] text-xs">
-            Error al conectar con la base de datos de emergencia. Verifica tu conexión 3G.
+          <div class="text-center py-10 text-[#EF4444] text-xs bg-red-50 border border-red-200 rounded-lg p-4">
+            <svg class="w-8 h-8 mx-auto mb-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            Error al conectar con la base de datos. Verifica tu conexión.
           </div>
         `;
       }
     }
 
     /**
-     * Suscripción de Realtime a inserciones/cambios en la tabla solicitudes
+     * Suscripción Realtime a nuevas inserciones
      */
     function configurarRealtime() {
       const client = getSupabaseClient();
       if (!client) return;
 
-      const channel = client
+      client
         .channel('public:solicitudes_changes')
         .on(
           'postgres_changes',
           { event: 'INSERT', schema: 'public', table: 'solicitudes' },
           payload => {
-            const nuevaSolicitud = payload.new;
-            console.log("Nueva solicitud detectada en tiempo real:", nuevaSolicitud);
-            
-            // 1. Insertar al inicio de la lista de memoria
-            todasLasSolicitudes.unshift(nuevaSolicitud);
-            
-            // 2. Disparar Toast flotante
-            mostrarToastNotificacion(nuevaSolicitud);
-
-            // 3. Volver a aplicar filtros para actualizar vistas
+            const nueva = payload.new;
+            todasLasSolicitudes.unshift(nueva);
+            mostrarToastNotificacion(nueva);
             aplicarFiltros();
+            cargarMetricas();
           }
         )
         .subscribe((status) => {
           const statusText = document.getElementById('realtime-status-text');
-          if (statusText) {
-            if (status === 'SUBSCRIBED') {
-              statusText.innerText = "Conexión activa - En Vivo";
-              statusText.parentElement.querySelector('span span').classList.remove('bg-red-500');
-              statusText.parentElement.querySelector('span span').classList.add('bg-green-500');
-            } else {
-              statusText.innerText = "Reconectando canal realtime...";
-              statusText.parentElement.querySelector('span span').classList.remove('bg-green-500');
-              statusText.parentElement.querySelector('span span').classList.add('bg-amber-500');
-            }
+          if (!statusText) return;
+          if (status === 'SUBSCRIBED') {
+            statusText.innerText = "Conexión activa — En Vivo";
+          } else {
+            statusText.innerText = "Reconectando...";
           }
         });
     }
 
     /**
-     * Aplica simultáneamente los filtros de dropdowns y buscador
+     * Aplica filtros de tipo, gravedad y búsqueda de texto
      */
     function aplicarFiltros() {
       const filtroTipo = document.getElementById('filter-tipo').value;
       const filtroGravedad = document.getElementById('filter-gravedad').value;
       const busqueda = document.getElementById('search-input').value.toLowerCase().trim();
 
-      solicitudesFiltradas = todasLasSolicitudes.filter(solicitud => {
-        // Filtro de tipo
-        if (filtroTipo !== 'todos' && solicitud.tipo !== filtroTipo) {
-          return false;
-        }
-
-        // Filtro de gravedad
-        if (filtroGravedad !== 'todos' && solicitud.gravedad !== filtroGravedad) {
-          return false;
-        }
-
-        // Filtro de búsqueda textual (nombre, apellido, motivo, items)
+      solicitudesFiltradas = todasLasSolicitudes.filter(sol => {
+        if (filtroTipo !== 'todos' && sol.tipo !== filtroTipo) return false;
+        if (filtroGravedad !== 'todos' && sol.gravedad !== filtroGravedad) return false;
         if (busqueda) {
-          const nombreComp = `${solicitud.nombre} ${solicitud.apellido}`.toLowerCase();
-          const motivoComp = (solicitud.motivo || "").toLowerCase();
-          const itemsComp = (solicitud.items || []).join(" ").toLowerCase();
-          const direccionComp = (solicitud.direccion_referencia || "").toLowerCase();
-
-          if (!nombreComp.includes(busqueda) &&
-              !motivoComp.includes(busqueda) &&
-              !itemsComp.includes(busqueda) &&
-              !direccionComp.includes(busqueda)) {
+          const nombreComp = `${sol.nombre} ${sol.apellido}`.toLowerCase();
+          const motivoComp = (sol.motivo || '').toLowerCase();
+          const itemsComp = (sol.items || []).join(' ').toLowerCase();
+          const dirComp = (sol.direccion_referencia || '').toLowerCase();
+          const tlfComp = (sol.telefono || '').toLowerCase();
+          if (!nombreComp.includes(busqueda) && !motivoComp.includes(busqueda) &&
+              !itemsComp.includes(busqueda) && !dirComp.includes(busqueda) &&
+              !tlfComp.includes(busqueda)) {
             return false;
           }
         }
-
         return true;
       });
 
-      // Actualizar mapa
       actualizarMarcadores(solicitudesFiltradas);
-      
-      // Actualizar listado lateral/inferior
       renderListaCards(solicitudesFiltradas);
     }
 
     /**
-     * Dibuja las tarjetas en el contenedor lateral
+     * Dibuja las tarjetas en el panel lateral
      */
     function renderListaCards(solicitudes) {
       const contenedor = document.getElementById('contenedor-lista-solicitudes');
       const totalText = document.getElementById('stats-total');
-      const badgeContador = document.getElementById('badge-contador-lista');
+      const badge = document.getElementById('badge-contador-lista');
 
-      // Actualizar contadores
-      if (totalText) {
-        totalText.innerText = `Mostrando ${solicitudes.length} de ${todasLasSolicitudes.length} solicitudes`;
-      }
-      if (badgeContador) {
-        badgeContador.innerText = solicitudes.length;
-      }
+      if (totalText) totalText.innerText = `${solicitudes.length} de ${todasLasSolicitudes.length} solicitudes`;
+      if (badge) badge.innerText = solicitudes.length;
 
       if (solicitudes.length === 0) {
         contenedor.innerHTML = `
-          <div class="text-center py-12 text-[#9CA3AF] text-sm bg-[#0D0D0D]/30 border border-[#2A2A2A] rounded-lg">
+          <div class="text-center py-12 text-slate-400 text-sm bg-slate-50 border border-slate-200 rounded-lg">
+            <svg class="w-8 h-8 mx-auto mb-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             No se encontraron solicitudes con los filtros activos.
           </div>
         `;
@@ -442,49 +483,63 @@
       }
 
       let html = '';
-      solicitudes.forEach(solicitud => {
-        const graveClass = solicitud.gravedad === 'grave'
+      solicitudes.forEach(sol => {
+        const leftBorderClass = sol.gravedad === 'grave'
           ? 'border-l-4 border-l-[#EF4444]'
-          : (solicitud.gravedad === 'moderado'
-            ? 'border-l-4 border-l-[#F59E0B]'
-            : 'border-l-4 border-l-[#22C55E]');
+          : (sol.gravedad === 'moderado' ? 'border-l-4 border-l-[#F59E0B]' : 'border-l-4 border-l-[#22C55E]');
 
-        const badge = solicitud.gravedad === 'grave'
+        const badge = sol.gravedad === 'grave'
           ? `<span class="badge-severe">SOS</span>`
-          : (solicitud.gravedad === 'moderado'
+          : (sol.gravedad === 'moderado'
             ? `<span class="badge-moderate">MODERADO</span>`
             : `<span class="badge-mild">LEVE</span>`);
 
-        const labelTipo = solicitud.tipo === 'centro_acopio' ? '🏡 Centro Acopio' : '🚨 Emergencia';
-        
+        const labelTipo = sol.tipo === 'centro_acopio' ? '🏡 Centro Acopio' : '🚨 Emergencia';
+
         let itemsHtml = '';
-        if (solicitud.items && solicitud.items.length > 0) {
+        if (sol.items && sol.items.length > 0) {
           itemsHtml = `
             <div class="flex flex-wrap gap-1 mt-1.5">
-              ${solicitud.items.slice(0, 3).map(i => `<span class="bg-[#0D0D0D] text-xs px-2 py-0.5 rounded border border-[#2A2A2A] text-[#F0F0F0]">${sanitizeHTML(i)}</span>`).join('')}
-              ${solicitud.items.length > 3 ? `<span class="text-xs text-[#9CA3AF] px-1 py-0.5 font-bold">+${solicitud.items.length - 3}</span>` : ''}
+              ${sol.items.slice(0, 3).map(i => `<span class="bg-slate-100 text-xs px-2 py-0.5 rounded border border-slate-200 text-slate-700">${sanitizeHTML(i)}</span>`).join('')}
+              ${sol.items.length > 3 ? `<span class="text-xs text-slate-500 px-1 py-0.5 font-bold">+${sol.items.length - 3}</span>` : ''}
             </div>
           `;
         }
 
-        const fotoThumb = solicitud.foto_url
-          ? `<img src="${solicitud.foto_url}" class="w-16 h-16 object-cover rounded-md border border-[#2A2A2A] shrink-0" alt="Foto">`
+        const fotoThumb = sol.foto_url
+          ? `<img src="${sol.foto_url}" class="w-16 h-16 object-cover rounded-md border border-slate-200 shrink-0" alt="Foto">`
+          : '';
+
+        const tlfHtml = sol.telefono
+          ? `<a href="tel:${sanitizeHTML(sol.telefono)}" onclick="event.stopPropagation()" class="text-[10px] text-[#003087] font-semibold hover:underline mt-0.5 inline-block">📞 ${sanitizeHTML(sol.telefono)}</a>`
+          : '';
+
+        // Botón de ruta Google Maps en la tarjeta
+        const mapsBtn = (sol.latitud && sol.longitud)
+          ? `<a href="https://www.google.com/maps/dir/?api=1&destination=${sol.latitud},${sol.longitud}" target="_blank" onclick="event.stopPropagation()" class="inline-flex items-center gap-1 bg-[#003087] text-white text-[10px] font-bold px-2.5 py-1 rounded-md hover:bg-[#002060] transition-emergency">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              Ir
+            </a>`
           : '';
 
         html += `
-          <div onclick="centrarMapaEnMarcador('${solicitud.id}')" class="bg-[#0D0D0D] border border-[#2A2A2A] p-4 rounded-xl shadow cursor-pointer hover:border-[#F5C400] transition-emergency focus-within:border-[#F5C400] ${graveClass}" tabindex="0">
+          <div onclick="centrarMapaEnMarcador('${sol.id}')" class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm cursor-pointer hover:border-[#003087]/40 hover:shadow-md transition-emergency focus-within:border-[#003087] ${leftBorderClass}" tabindex="0">
             <div class="flex gap-3 justify-between items-start">
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2 mb-1">
-                  <span class="text-[11px] font-bold text-[#9CA3AF] uppercase tracking-wider">${labelTipo}</span>
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">${labelTipo}</span>
                   ${badge}
                 </div>
-                <h3 class="text-sm font-bold text-white leading-tight truncate">${sanitizeHTML(solicitud.nombre)} ${sanitizeHTML(solicitud.apellido)}</h3>
-                <p class="text-xs text-[#9CA3AF] mt-1 line-clamp-2 leading-relaxed">${sanitizeHTML(solicitud.motivo)}</p>
+                <h3 class="text-sm font-bold text-slate-900 leading-tight truncate">${sanitizeHTML(sol.nombre)} ${sanitizeHTML(sol.apellido)}</h3>
+                ${tlfHtml}
+                <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">${sanitizeHTML(sol.motivo)}</p>
                 ${itemsHtml}
-                <div class="flex justify-between items-center mt-3 pt-2 border-t border-[#2A2A2A]/50 text-[10px] text-[#9CA3AF]">
-                  <span>${formatTiempoRelativo(solicitud.created_at)}</span>
-                  <button onclick="event.stopPropagation(); verDetalleSolicitud('${solicitud.id}')" class="text-[#F5C400] font-bold hover:underline">Ver detalle</button>
+                <div class="flex justify-between items-center mt-3 pt-2 border-t border-slate-100 text-[10px] text-slate-400">
+                  <span>${formatTiempoRelativo(sol.created_at)}</span>
+                  <div class="flex items-center gap-2">
+                    ${mapsBtn}
+                    <button onclick="event.stopPropagation(); verDetalleSolicitud('${sol.id}')" class="text-[#003087] font-bold hover:underline text-[11px]">Ver detalle</button>
+                  </div>
                 </div>
               </div>
               ${fotoThumb}
@@ -497,25 +552,36 @@
     }
 
     /**
-     * Muestra el modal con los detalles de una solicitud
+     * Abre el modal de detalles de una solicitud
      */
     function verDetalleSolicitud(id) {
-      const solicitud = todasLasSolicitudes.find(x => x.id === id);
-      if (!solicitud) return;
+      const sol = todasLasSolicitudes.find(x => x.id === id);
+      if (!sol) return;
 
-      // Configurar textos en el modal
-      document.getElementById('detail-tipo').innerText = solicitud.tipo === 'centro_acopio' ? '🏡 CENTRO DE ACOPIO' : '🚨 EMERGENCIA INDIVIDUAL';
-      document.getElementById('detail-nombre-completo').innerText = `${sanitizeHTML(solicitud.nombre)} ${sanitizeHTML(solicitud.apellido)}`;
-      document.getElementById('detail-cedula').innerText = `V-${sanitizeHTML(solicitud.cedula)}`;
-      document.getElementById('detail-fecha').innerText = new Date(solicitud.created_at).toLocaleString('es-VE', { timeZone: 'America/Caracas' });
-      document.getElementById('detail-motivo').innerText = sanitizeHTML(solicitud.motivo);
-      document.getElementById('detail-direccion').innerText = sanitizeHTML(solicitud.direccion_referencia) || "No se especificaron referencias adicionales.";
+      document.getElementById('detail-tipo').innerText = sol.tipo === 'centro_acopio' ? '🏡 CENTRO DE ACOPIO' : '🚨 EMERGENCIA INDIVIDUAL';
+      document.getElementById('detail-nombre-completo').innerText = `${sanitizeHTML(sol.nombre)} ${sanitizeHTML(sol.apellido)}`;
+      document.getElementById('detail-cedula').innerText = `V-${sanitizeHTML(sol.cedula)}`;
+      document.getElementById('detail-fecha').innerText = new Date(sol.created_at).toLocaleString('es-VE', { timeZone: 'America/Caracas' });
+      document.getElementById('detail-motivo').innerText = sanitizeHTML(sol.motivo);
+      document.getElementById('detail-direccion').innerText = sanitizeHTML(sol.direccion_referencia) || 'No se especificaron referencias adicionales.';
 
-      // Configurar gravedad badge
+      // Teléfono
+      const tlfContainer = document.getElementById('detail-telefono-container');
+      const tlfLink = document.getElementById('detail-telefono-link');
+      const tlfTexto = document.getElementById('detail-telefono-texto');
+      if (sol.telefono) {
+        tlfContainer.classList.remove('hidden');
+        tlfLink.href = `tel:${sanitizeHTML(sol.telefono)}`;
+        tlfTexto.innerText = sanitizeHTML(sol.telefono);
+      } else {
+        tlfContainer.classList.add('hidden');
+      }
+
+      // Badge de Gravedad
       const badgeContainer = document.getElementById('detail-gravedad-badge');
-      if (solicitud.gravedad === 'grave') {
+      if (sol.gravedad === 'grave') {
         badgeContainer.innerHTML = `<span class="badge-severe">GRAVE (SOS)</span>`;
-      } else if (solicitud.gravedad === 'moderado') {
+      } else if (sol.gravedad === 'moderado') {
         badgeContainer.innerHTML = `<span class="badge-moderate">MODERADO</span>`;
       } else {
         badgeContainer.innerHTML = `<span class="badge-mild">LEVE</span>`;
@@ -524,11 +590,11 @@
       // Items/Insumos
       const itemsContainer = document.getElementById('detail-items-container');
       const itemsList = document.getElementById('detail-items-list');
-      if (solicitud.items && solicitud.items.length > 0) {
+      if (sol.items && sol.items.length > 0) {
         itemsContainer.classList.remove('hidden');
-        itemsList.innerHTML = solicitud.items.map(item => `
-          <span class="bg-[#0D0D0D] border border-[#2A2A2A] text-white px-2.5 py-1 rounded text-xs">${sanitizeHTML(item)}</span>
-        `).join('');
+        itemsList.innerHTML = sol.items.map(item =>
+          `<span class="bg-slate-100 border border-slate-200 text-slate-700 px-2.5 py-1 rounded text-xs">${sanitizeHTML(item)}</span>`
+        ).join('');
       } else {
         itemsContainer.classList.add('hidden');
         itemsList.innerHTML = '';
@@ -538,25 +604,32 @@
       const fotoContainer = document.getElementById('detail-foto-container');
       const img = document.getElementById('detail-foto');
       const link = document.getElementById('detail-foto-link');
-      if (solicitud.foto_url) {
+      if (sol.foto_url) {
         fotoContainer.classList.remove('hidden');
-        img.src = solicitud.foto_url;
-        link.href = solicitud.foto_url;
+        img.src = sol.foto_url;
+        link.href = sol.foto_url;
       } else {
         fotoContainer.classList.add('hidden');
         img.src = '';
       }
 
-      // Configurar boton de centrar en mapa
+      // Botón Google Maps
+      const btnMaps = document.getElementById('btn-modal-maps');
+      if (sol.latitud && sol.longitud) {
+        btnMaps.href = `https://www.google.com/maps/dir/?api=1&destination=${sol.latitud},${sol.longitud}`;
+        btnMaps.classList.remove('hidden');
+      } else {
+        btnMaps.classList.add('hidden');
+      }
+
+      // Botón Centrar en Mapa
       const btnCentrar = document.getElementById('btn-modal-centrar');
       btnCentrar.onclick = () => {
         centrarMapaEnMarcador(id);
         cerrarModalDetalle();
-        // Scroll hacia arriba en mobile
         window.scrollTo({ top: 120, behavior: 'smooth' });
       };
 
-      // Mostrar modal
       document.getElementById('modal-detalle').classList.remove('hidden');
     }
 
@@ -565,45 +638,37 @@
     }
 
     /**
-     * Muestra una notificación Toast flotante al recibir nueva solicitud
+     * Toast de notificación en tiempo real
      */
-    function mostrarToastNotificacion(solicitud) {
+    function mostrarToastNotificacion(sol) {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
-      
-      // Bloquear propagacion de puntero pero permitir clics
-      toast.className = "bg-[#1A1A1A] border-2 border-[#F5C400] p-4 rounded-xl shadow-2xl flex gap-3 pointer-events-auto transform translate-y-4 opacity-0 transition-all duration-300 shadow-yellow-500/5 cursor-pointer max-w-sm";
-      
-      const icon = solicitud.tipo === 'centro_acopio' ? '🏡' : '🚨';
-      const label = solicitud.tipo === 'centro_acopio' ? 'Nuevo Centro de Acopio' : 'Nueva Ayuda Urgente';
-      
+
+      toast.className = "bg-white border-2 border-[#F5C400] p-4 rounded-xl shadow-2xl flex gap-3 pointer-events-auto transform translate-y-4 opacity-0 transition-all duration-300 cursor-pointer max-w-sm";
+
+      const icon = sol.tipo === 'centro_acopio' ? '🏡' : '🚨';
+      const label = sol.tipo === 'centro_acopio' ? 'Nuevo Centro de Acopio' : 'Nueva Ayuda Urgente';
+
       toast.innerHTML = `
         <div class="text-2xl mt-0.5">${icon}</div>
         <div class="flex-1 min-w-0">
           <div class="flex items-center justify-between gap-2">
-            <span class="text-xs font-bold text-[#F5C400] uppercase tracking-wider">${label}</span>
-            <span class="w-2 h-2 rounded-full bg-[#EF4444]"></span>
+            <span class="text-xs font-bold text-[#CF142B] uppercase tracking-wider">${label}</span>
+            <span class="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse shrink-0"></span>
           </div>
-          <h4 class="text-xs font-bold text-white mt-0.5 truncate">${sanitizeHTML(solicitud.nombre)} ${sanitizeHTML(solicitud.apellido)}</h4>
-          <p class="text-[11px] text-[#9CA3AF] line-clamp-2 mt-0.5">${sanitizeHTML(solicitud.motivo)}</p>
+          <h4 class="text-xs font-bold text-slate-900 mt-0.5 truncate">${sanitizeHTML(sol.nombre)} ${sanitizeHTML(sol.apellido)}</h4>
+          <p class="text-[11px] text-slate-500 line-clamp-2 mt-0.5">${sanitizeHTML(sol.motivo)}</p>
         </div>
       `;
 
-      // Clicar en la alerta centra el mapa en la solicitud
       toast.onclick = () => {
-        centrarMapaEnMarcador(solicitud.id);
-        verDetalleSolicitud(solicitud.id);
+        centrarMapaEnMarcador(sol.id);
+        verDetalleSolicitud(sol.id);
         toast.remove();
       };
 
       container.appendChild(toast);
-
-      // Trigger de transicion
-      setTimeout(() => {
-        toast.classList.add('toast-active');
-      }, 100);
-
-      // Auto-eliminar despues de 8 segundos
+      setTimeout(() => toast.classList.add('toast-active'), 100);
       setTimeout(() => {
         toast.classList.remove('toast-active');
         setTimeout(() => toast.remove(), 300);

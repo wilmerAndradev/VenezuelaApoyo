@@ -4,13 +4,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
 :root {
-  --color-bg: #0D0D0D;
-  --color-primary: #CF142B;
-  --color-secondary: #F5C400;
-  --color-text: #F0F0F0;
-  --color-muted: #9CA3AF;
-  --color-card: #1A1A1A;
-  --color-border: #2A2A2A;
+  --color-bg: #F8FAFC;
+  --color-primary: #CF142B; /* Rojo */
+  --color-secondary: #F5C400; /* Amarillo */
+  --color-accent: #003087; /* Azul */
+  --color-text: #0F172A;
+  --color-muted: #475569;
+  --color-card: #FFFFFF;
+  --color-border: #E2E8F0;
   
   --color-grave: #EF4444;
   --color-moderado: #F59E0B;

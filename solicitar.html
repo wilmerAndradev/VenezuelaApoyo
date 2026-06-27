@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registrar Solicitud — AcopioVE</title>
+  <title>Registrar Solicitud — AyudaVenezuela</title>
   
   <!-- SEO Meta Tags -->
   <meta name="description" content="Registra necesidades de insumos para centros de acopio e individuos afectados en Venezuela.">
-  <meta name="theme-color" content="#0D0D0D">
+  <meta name="theme-color" content="#F8FAFC">
+
+  <!-- Vector Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><clipPath id='h'><path d='M12,21.35l-1.45-1.32C5.4,15.36,2,12.28,2,8.5C2,5.42,4.42,3,7.5,3c1.74,0,3.41,0.81,4.5,2.09C13.09,3.81,14.76,3,16.5,3C19.58,3,22,5.42,22,8.5c0,3.78-3.4,6.86-8.55,11.54L12,21.35z' transform='scale(4.2)'/></clipPath><g clip-path='url(%23h)'><rect x='0' y='0' width='100' height='33' fill='%23F5C400'/><rect x='0' y='33' width='100' height='34' fill='%23003087'/><rect x='0' y='67' width='100' height='33' fill='%23CF142B'/></g></svg>">
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,36 +40,58 @@
 
   <style>
     body {
-      background-color: #0D0D0D !important;
-      color: #F0F0F0 !important;
+      background-color: #F8FAFC !important;
+      color: #0F172A !important;
     }
     input, select, textarea {
-      background-color: #1A1A1A !important;
-      border-color: #2A2A2A !important;
-      color: #F0F0F0 !important;
+      background-color: #FFFFFF !important;
+      border-color: #D1D5DB !important;
+      color: #0F172A !important;
     }
     input:focus, select:focus, textarea:focus {
-      border-color: #F5C400 !important;
+      border-color: #003087 !important;
       outline: none;
-    }
-    /* Estilos personalizados para los botones de Gravedad */
-    .gravity-btn {
-      transition: all 200ms ease;
+      box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.1);
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between font-sans">
+<body class="min-h-screen flex flex-col justify-between font-sans antialiased">
 
   <!-- Header -->
-  <header class="border-b border-[#2A2A2A] bg-[#0D0D0D]/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
+  <header class="border-b border-[#E2E8F0] bg-white/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3 shadow-sm">
     <div class="max-w-6xl mx-auto flex items-center justify-between">
-      <div class="flex flex-col">
-        <a href="index.html" class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-          <span class="text-[#CF142B]">Ayuda</span><span class="text-[#F5C400]">Venezuela</span>
-        </a>
-        <span class="text-[11px] text-[#9CA3AF] tracking-wider uppercase font-medium">Plataforma de respuesta humanitaria</span>
+      <div class="flex items-center gap-3">
+        <!-- Logo SVG Corazón Venezuela -->
+        <svg class="w-8 h-8 shrink-0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="logo-heart-solicitar">
+              <path d="M12,21.35l-1.45-1.32C5.4,15.36,2,12.28,2,8.5C2,5.42,4.42,3,7.5,3c1.74,0,3.41,0.81,4.5,2.09C13.09,3.81,14.76,3,16.5,3C19.58,3,22,5.42,22,8.5c0,3.78-3.4,6.86-8.55,11.54L12,21.35z" transform="scale(4.2)" />
+            </clipPath>
+          </defs>
+          <g clip-path="url(#logo-heart-solicitar)">
+            <rect x="0" y="0" width="100" height="33" fill="#F5C400" />
+            <rect x="0" y="33" width="100" height="34" fill="#003087" />
+            <rect x="0" y="67" width="100" height="33" fill="#CF142B" />
+            <!-- Estrellas -->
+            <circle cx="50" cy="42" r="1.5" fill="white" />
+            <circle cx="43" cy="44" r="1.5" fill="white" />
+            <circle cx="57" cy="44" r="1.5" fill="white" />
+            <circle cx="37" cy="48" r="1.5" fill="white" />
+            <circle cx="63" cy="48" r="1.5" fill="white" />
+            <circle cx="34" cy="54" r="1.5" fill="white" />
+            <circle cx="66" cy="54" r="1.5" fill="white" />
+            <circle cx="50" cy="49" r="1.5" fill="white" />
+          </g>
+          <path d="M12,21.35l-1.45-1.32C5.4,15.36,2,12.28,2,8.5C2,5.42,4.42,3,7.5,3c1.74,0,3.41,0.81,4.5,2.09C13.09,3.81,14.76,3,16.5,3C19.58,3,22,5.42,22,8.5c0,3.78-3.4,6.86-8.55,11.54L12,21.35z" transform="scale(4.2)" fill="none" stroke="#E2E8F0" stroke-width="1" />
+        </svg>
+        <div class="flex flex-col">
+          <a href="index.html" class="text-xl font-bold tracking-tight text-slate-900 flex items-center leading-none">
+            Ayuda<span class="text-[#003087]">Venezuela</span>
+          </a>
+          <span class="text-[10px] text-slate-500 tracking-wider uppercase font-medium mt-0.5">Plataforma de respuesta humanitaria</span>
+        </div>
       </div>
-      <a href="index.html" class="text-xs bg-[#1A1A1A] border border-[#2A2A2A] text-white px-3 py-1.5 rounded-md hover:bg-[#222] transition-emergency min-h-[38px] flex items-center justify-center font-medium">
+      <a href="index.html" class="text-xs bg-white border border-slate-200 text-slate-700 px-3.5 py-1.5 rounded-md hover:bg-slate-50 transition-emergency min-h-[38px] flex items-center justify-center font-bold shadow-sm">
         Volver Inicio
       </a>
     </div>
@@ -76,18 +101,18 @@
   <main class="max-w-2xl mx-auto px-4 py-8 w-full flex-1">
     
     <div class="mb-6">
-      <h1 class="text-2xl md:text-3xl font-bold text-white mb-2">Registrar Requerimiento</h1>
-      <p class="text-sm text-[#9CA3AF]">
-        Completa el formulario para publicar tus necesidades de insumos o asistencia en el mapa público.
+      <h1 class="text-2xl md:text-3xl font-bold text-slate-900 mb-1">Registrar Requerimiento</h1>
+      <p class="text-xs md:text-sm text-slate-600">
+        Completa el formulario para publicar tus necesidades en el panel nacional.
       </p>
     </div>
 
     <!-- Formulario de Solicitud -->
-    <form id="form-solicitud" class="space-y-6 bg-[#1A1A1A] border border-[#2A2A2A] p-6 rounded-xl shadow-lg">
+    <form id="form-solicitud" class="space-y-5 bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
       
       <!-- Selector de Rol (Tipo) -->
       <div>
-        <label for="input-tipo" class="block text-sm font-semibold text-white mb-2">Tipo de Solicitante <span class="text-[#CF142B]">*</span></label>
+        <label for="input-tipo" class="block text-sm font-semibold text-slate-800 mb-1.5">Tipo de Solicitante <span class="text-[#CF142B]">*</span></label>
         <select id="input-tipo" name="tipo" class="w-full p-3 rounded-lg border text-base" required>
           <option value="centro_acopio">🏡 Centro de Acopio (Organización / Almacén)</option>
           <option value="individuo">🚨 Individuo Afectado (Caso Familiar / Personal)</option>
@@ -97,49 +122,56 @@
       <!-- Datos Personales / Representante -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label for="input-nombre" class="block text-sm font-semibold text-white mb-1">Nombre del Responsable <span class="text-[#CF142B]">*</span></label>
+          <label for="input-nombre" class="block text-sm font-semibold text-slate-800 mb-1">Nombre del Responsable <span class="text-[#CF142B]">*</span></label>
           <input type="text" id="input-nombre" name="nombre" class="w-full p-3 rounded-lg border text-base" placeholder="Ej. Juan" required>
         </div>
         <div>
-          <label for="input-apellido" class="block text-sm font-semibold text-white mb-1">Apellido del Responsable <span class="text-[#CF142B]">*</span></label>
+          <label for="input-apellido" class="block text-sm font-semibold text-slate-800 mb-1">Apellido del Responsable <span class="text-[#CF142B]">*</span></label>
           <input type="text" id="input-apellido" name="apellido" class="w-full p-3 rounded-lg border text-base" placeholder="Ej. Pérez" required>
         </div>
       </div>
 
-      <!-- Cédula -->
-      <div>
-        <label for="input-cedula" class="block text-sm font-semibold text-white mb-1">Número de Cédula (Solo Números) <span class="text-[#CF142B]">*</span></label>
-        <input type="text" id="input-cedula" name="cedula" inputmode="numeric" pattern="[0-9]*" class="w-full p-3 rounded-lg border text-base" placeholder="Ej. 12345678" required>
-        <span id="error-cedula" class="text-xs text-[#EF4444] mt-1 hidden">La cédula debe contener solo números (mínimo 6 dígitos).</span>
+      <!-- Cédula y Teléfono -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="input-cedula" class="block text-sm font-semibold text-slate-800 mb-1">Cédula del Responsable <span class="text-[#CF142B]">*</span></label>
+          <input type="text" id="input-cedula" name="cedula" inputmode="numeric" pattern="[0-9]*" class="w-full p-3 rounded-lg border text-base" placeholder="Ej. 12345678" required>
+          <span id="error-cedula" class="text-xs text-[#EF4444] mt-1 hidden">La cédula debe contener solo números (mínimo 6 dígitos).</span>
+        </div>
+        <div>
+          <label for="input-telefono" class="block text-sm font-semibold text-slate-800 mb-1">Teléfono de Contacto <span class="text-[#CF142B]">*</span></label>
+          <input type="tel" id="input-telefono" name="telefono" inputmode="tel" class="w-full p-3 rounded-lg border text-base" placeholder="Ej. 04125556677" required>
+          <span id="error-telefono" class="text-xs text-[#EF4444] mt-1 hidden">Por favor ingresa un teléfono válido (mínimo 10 dígitos).</span>
+        </div>
       </div>
 
       <!-- Motivo / Descripción -->
       <div>
-        <label for="input-motivo" class="block text-sm font-semibold text-white mb-1">Motivo / Descripción de la Situación <span class="text-[#CF142B]">*</span></label>
-        <textarea id="input-motivo" name="motivo" rows="4" minlength="20" class="w-full p-3 rounded-lg border text-base leading-relaxed" placeholder="Describe brevemente la situación de emergencia y qué asistencia necesitas (mínimo 20 caracteres)..." required></textarea>
+        <label for="input-motivo" class="block text-sm font-semibold text-slate-800 mb-1">Motivo / Descripción de la Situación <span class="text-[#CF142B]">*</span></label>
+        <textarea id="input-motivo" name="motivo" rows="4" minlength="20" class="w-full p-3 rounded-lg border text-base leading-relaxed" placeholder="Describe brevemente la situación de emergencia y qué insumos o ayuda necesitas (mínimo 20 caracteres)..." required></textarea>
         <span id="error-motivo" class="text-xs text-[#EF4444] mt-1 hidden">Por favor describe tu situación con más detalle (mínimo 20 caracteres).</span>
       </div>
 
       <!-- Selector de Gravedad -->
       <div>
-        <label class="block text-sm font-semibold text-white mb-2">Nivel de Gravedad / Urgencia <span class="text-[#CF142B]">*</span></label>
+        <label class="block text-sm font-semibold text-slate-800 mb-2">Nivel de Gravedad / Urgencia <span class="text-[#CF142B]">*</span></label>
         <input type="hidden" id="input-gravedad" name="gravedad" value="moderado">
         
         <div class="grid grid-cols-3 gap-3">
           <!-- Leve -->
-          <button type="button" onclick="seleccionarGravedad('leve')" id="btn-gravedad-leve" class="gravity-btn p-3 rounded-lg border border-[#2A2A2A] text-sm font-bold flex flex-col items-center justify-center gap-1 bg-[#1A1A1A] hover:bg-green-500/10">
+          <button type="button" onclick="seleccionarGravedad('leve')" id="btn-gravedad-leve" class="gravity-btn p-3 rounded-lg border border-slate-200 text-sm font-bold flex flex-col items-center justify-center gap-1 bg-white hover:bg-green-500/10">
             <span class="w-3 h-3 rounded-full bg-[#22C55E]"></span>
             <span class="text-[#22C55E]">LEVE</span>
           </button>
           
           <!-- Moderado -->
-          <button type="button" onclick="seleccionarGravedad('moderado')" id="btn-gravedad-moderado" class="gravity-btn p-3 rounded-lg border-2 border-[#F59E0B] text-sm font-bold flex flex-col items-center justify-center gap-1 bg-[#F59E0B]/10">
+          <button type="button" onclick="seleccionarGravedad('moderado')" id="btn-gravedad-moderado" class="gravity-btn p-3 rounded-lg border-2 border-[#F59E0B] text-sm font-bold flex flex-col items-center justify-center gap-1 bg-[#F59E0B]/5">
             <span class="w-3 h-3 rounded-full bg-[#F59E0B]"></span>
             <span class="text-[#F59E0B]">MODERADO</span>
           </button>
           
           <!-- Grave -->
-          <button type="button" onclick="seleccionarGravedad('grave')" id="btn-gravedad-grave" class="gravity-btn p-3 rounded-lg border border-[#2A2A2A] text-sm font-bold flex flex-col items-center justify-center gap-1 bg-[#1A1A1A] hover:bg-red-500/10">
+          <button type="button" onclick="seleccionarGravedad('grave')" id="btn-gravedad-grave" class="gravity-btn p-3 rounded-lg border border-slate-200 text-sm font-bold flex flex-col items-center justify-center gap-1 bg-white hover:bg-red-500/10">
             <span class="w-3 h-3 rounded-full bg-[#EF4444]"></span>
             <span class="text-[#EF4444]">GRAVE (SOS)</span>
           </button>
@@ -148,12 +180,13 @@
 
       <!-- Insumos / Lista de Items (Solo para Centro de Acopio) -->
       <div id="seccion-items">
-        <label class="block text-sm font-semibold text-white mb-1">Listado de Insumos Requeridos <span class="text-[#CF142B]">*</span></label>
-        <p class="text-xs text-[#9CA3AF] mb-2">Ingresa uno a uno los insumos prioritarios (ej. Agua potable, Gasas, etc.).</p>
+        <label class="block text-sm font-semibold text-slate-800 mb-1">Listado de Insumos Requeridos <span class="text-[#CF142B]">*</span></label>
+        <p class="text-xs text-slate-500 mb-2">Ingresa uno a uno los insumos prioritarios (ej. Agua embotellada, Medicamentos, etc.).</p>
         
-        <div class="flex gap-2">
-          <input type="text" id="input-nuevo-item" class="flex-1 p-3 rounded-lg border text-base" placeholder="Ej. Medicamentos de primeros auxilios">
-          <button type="button" id="btn-agregar-item" class="bg-[#1A1A1A] border-2 border-[#2A2A2A] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#222] min-h-[48px] flex items-center justify-center">
+        <!-- Fix responsivo: flex-col en móviles, sm:flex-row en tablet/desktop -->
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input type="text" id="input-nuevo-item" class="flex-1 p-3 rounded-lg border text-base" placeholder="Ej. Gasas y vendas">
+          <button type="button" id="btn-agregar-item" class="bg-[#003087] text-white px-5 py-3 rounded-lg font-bold hover:bg-[#002060] transition-emergency min-h-[48px] flex items-center justify-center shrink-0">
             Agregar
           </button>
         </div>
@@ -167,44 +200,44 @@
 
       <!-- Mapa interactivo de Geolocalización -->
       <div>
-        <label class="block text-sm font-semibold text-white mb-1">Ubicación Geográfica <span class="text-[#CF142B]">*</span></label>
-        <p class="text-xs text-[#9CA3AF] mb-3">Haz clic en el mapa para marcar tu ubicación exacta o pulsa "Mi Ubicación" (GPS).</p>
+        <label class="block text-sm font-semibold text-slate-800 mb-1">Ubicación Geográfica <span class="text-[#CF142B]">*</span></label>
+        <p class="text-xs text-slate-500 mb-3">Haz clic en el mapa para marcar tu ubicación exacta o pulsa "Mi Ubicación" (GPS).</p>
         
         <!-- Div del mapa -->
-        <div class="relative w-full border border-[#2A2A2A] rounded-lg overflow-hidden mb-3">
+        <div class="relative w-full border border-slate-200 rounded-lg overflow-hidden mb-3">
           <div id="mapa-registro" class="w-full h-72 z-0"></div>
         </div>
 
         <div class="grid grid-cols-2 gap-4 mb-3">
           <div>
-            <label class="block text-[11px] text-[#9CA3AF] uppercase font-bold mb-0.5">Latitud</label>
-            <input type="text" id="input-latitud" readonly class="w-full p-2.5 rounded-lg border text-sm opacity-70 cursor-not-allowed">
+            <label class="block text-[10px] text-slate-500 uppercase font-bold mb-0.5">Latitud</label>
+            <input type="text" id="input-latitud" readonly class="w-full p-2.5 rounded-lg border text-sm opacity-70 cursor-not-allowed bg-slate-50">
           </div>
           <div>
-            <label class="block text-[11px] text-[#9CA3AF] uppercase font-bold mb-0.5">Longitud</label>
-            <input type="text" id="input-longitud" readonly class="w-full p-2.5 rounded-lg border text-sm opacity-70 cursor-not-allowed">
+            <label class="block text-[10px] text-slate-500 uppercase font-bold mb-0.5">Longitud</label>
+            <input type="text" id="input-longitud" readonly class="w-full p-2.5 rounded-lg border text-sm opacity-70 cursor-not-allowed bg-slate-50">
           </div>
         </div>
 
         <div>
-          <label for="input-direccion-referencia" class="block text-sm font-semibold text-white mb-1">Dirección de Referencia <span class="text-[#CF142B]">*</span></label>
-          <textarea id="input-direccion-referencia" name="direccion_referencia" rows="2" class="w-full p-3 rounded-lg border text-sm" placeholder="Dirección aproximada y puntos de referencia cercanos (ej. Frente a la Plaza Bolívar)..." required></textarea>
+          <label for="input-direccion-referencia" class="block text-sm font-semibold text-slate-800 mb-1">Dirección y Puntos de Referencia <span class="text-[#CF142B]">*</span></label>
+          <textarea id="input-direccion-referencia" name="direccion_referencia" rows="2" class="w-full p-3 rounded-lg border text-sm" placeholder="Dirección aproximada y puntos de referencia cercanos (ej. Frente a la farmacia principal)..." required></textarea>
         </div>
         <span id="error-mapa" class="text-xs text-[#EF4444] mt-1 hidden">Debes marcar tu ubicación en el mapa.</span>
       </div>
 
       <!-- Adjuntar foto con Canvas Compresión -->
       <div>
-        <label for="input-foto" class="block text-sm font-semibold text-white mb-1">Adjuntar Foto de la Situación (Opcional)</label>
-        <p class="text-xs text-[#9CA3AF] mb-3">La imagen será comprimida localmente a menos de 500 KB para conexiones lentas.</p>
+        <label for="input-foto" class="block text-sm font-semibold text-slate-800 mb-1">Adjuntar Foto de la Situación (Opcional)</label>
+        <p class="text-xs text-slate-500 mb-3">La imagen será comprimida localmente a menos de 500 KB para conexiones lentas.</p>
         
-        <input type="file" id="input-foto" accept="image/*" class="w-full p-2 bg-[#1A1A1A] text-sm text-[#9CA3AF] border border-[#2A2A2A] rounded-lg file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#2A2A2A] file:text-white hover:file:bg-[#333]">
+        <input type="file" id="input-foto" accept="image/*" class="w-full p-2 bg-white text-sm text-slate-600 border border-slate-200 rounded-lg file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
         
         <!-- Preview de Imagen -->
         <div id="container-preview-foto" class="mt-3 hidden">
-          <div class="relative inline-block border border-[#2A2A2A] rounded-lg overflow-hidden">
+          <div class="relative inline-block border border-slate-200 rounded-lg overflow-hidden">
             <img id="preview-foto" src="" class="max-h-40 object-contain" alt="Vista previa de la foto">
-            <button type="button" id="btn-eliminar-foto" class="absolute top-1.5 right-1.5 bg-black/75 hover:bg-black text-white p-1 rounded-full">
+            <button type="button" id="btn-eliminar-foto" class="absolute top-1.5 right-1.5 bg-black/70 hover:bg-black text-white p-1 rounded-full">
               <!-- Cruz SVG -->
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -214,7 +247,7 @@
 
       <!-- Botón de Envío -->
       <div class="pt-4">
-        <button type="submit" id="btn-enviar-formulario" class="btn-emergency-primary w-full text-base font-bold min-h-[50px]">
+        <button type="submit" id="btn-enviar-formulario" class="btn-emergency-primary w-full text-base font-bold min-h-[50px] shadow-sm">
           <!-- Icono Guardar SVG -->
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
           <span id="texto-enviar">Publicar Solicitud</span>
@@ -226,21 +259,21 @@
   </main>
 
   <!-- Modal de Confirmación Exitoso -->
-  <div id="modal-confirmacion" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden px-4">
-    <div class="bg-[#1A1A1A] border-2 border-[#2A2A2A] p-6 rounded-xl max-w-md w-full shadow-2xl text-center">
+  <div id="modal-confirmacion" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm hidden px-4">
+    <div class="bg-white border border-slate-200 p-6 rounded-xl max-w-md w-full shadow-2xl text-center">
       
-      <div class="w-16 h-16 bg-green-500/10 border border-green-500/30 text-[#22C55E] rounded-full flex items-center justify-center mx-auto mb-4">
+      <div class="w-14 h-14 bg-green-100 border border-green-200 text-[#22C55E] rounded-full flex items-center justify-center mx-auto mb-4">
         <!-- Tick SVG -->
-        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
       </div>
 
-      <h2 class="text-2xl font-bold text-white mb-2">¡Solicitud Registrada!</h2>
-      <p class="text-sm text-[#9CA3AF] mb-4">
+      <h2 class="text-xl font-bold text-slate-900 mb-2">¡Solicitud Registrada!</h2>
+      <p class="text-xs text-slate-600 mb-4">
         Tu reporte ha sido publicado correctamente en el mapa nacional de respuesta humanitaria.
       </p>
 
       <!-- ID de Solicitud -->
-      <div class="bg-[#0D0D0D] border border-[#2A2A2A] p-3 rounded-lg text-xs font-mono text-[#F5C400] select-all mb-6">
+      <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-xs font-mono text-[#003087] select-all mb-6">
         ID: <span id="span-id-solicitud">--------------------</span>
       </div>
 
@@ -248,7 +281,7 @@
         <a href="dashboard.html" class="btn-emergency-warning flex-1 py-3 text-sm font-bold flex items-center justify-center">
           Ir al Panel Público
         </a>
-        <button type="button" onclick="cerrarYReiniciar()" class="btn-emergency-secondary flex-1 py-3 text-sm font-bold flex items-center justify-center">
+        <button type="button" onclick="cerrarYReiniciar()" class="btn-emergency-secondary flex-1 py-3 text-sm font-bold flex items-center justify-center bg-white">
           Registrar Otro
         </button>
       </div>
@@ -257,10 +290,10 @@
   </div>
 
   <!-- Footer -->
-  <footer class="border-t border-[#2A2A2A] bg-[#0D0D0D] px-4 py-6 text-center">
+  <footer class="border-t border-[#E2E8F0] bg-white px-4 py-5 text-center">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="text-xs text-[#9CA3AF]">
-        &copy; 2026 Ecosistema <strong>AyudaVenezuela</strong>. Iniciativa humanitaria sin fines de lucro.
+      <div class="text-xs text-slate-500">
+        &copy; 2026 Ecosistema <strong>AyudaVenezuela</strong>. Desarrollado para emergencias humanitarias.
       </div>
     </div>
   </footer>
@@ -350,7 +383,7 @@
           if (file.size <= 524288) {
             fotoComprimidaBlob = file;
           } else {
-            alert("No se pudo comprimir la foto y excede el límite permitido de 500 KB.");
+            alert("No se pudo comprimir la foto y excede el límite de 500 KB.");
             inputFoto.value = '';
             containerPreview.classList.add('hidden');
             fotoComprimidaBlob = null;
@@ -365,13 +398,26 @@
         fotoComprimidaBlob = null;
       });
 
-      // 6. Validación de inputs individuales en tiempo real
+      // 6. Validación de inputs individuales
       const inputCedula = document.getElementById('input-cedula');
       inputCedula.addEventListener('input', () => {
         const regexCedula = /^[0-9]+$/;
         const val = inputCedula.value;
         const errSpan = document.getElementById('error-cedula');
         if (val && (!regexCedula.test(val) || val.length < 6)) {
+          errSpan.classList.remove('hidden');
+        } else {
+          errSpan.classList.add('hidden');
+        }
+      });
+
+      const inputTelefono = document.getElementById('input-telefono');
+      inputTelefono.addEventListener('input', () => {
+        const val = inputTelefono.value.trim();
+        const errSpan = document.getElementById('error-telefono');
+        // Validar solo digitos, guiones o mas (+), minimo 10 digitos
+        const regexTlf = /^[0-9+\-\s]{10,}$/;
+        if (val && !regexTlf.test(val)) {
           errSpan.classList.remove('hidden');
         } else {
           errSpan.classList.add('hidden');
@@ -403,7 +449,7 @@
         seccion.classList.remove('hidden');
       } else {
         seccion.classList.add('hidden');
-        errSpan.classList.add('hidden'); // Ocultar error si se cambia
+        errSpan.classList.add('hidden');
       }
     }
 
@@ -419,21 +465,24 @@
 
       // Resetear clases
       [btnLeve, btnMod, btnGrave].forEach(btn => {
-        btn.classList.remove('border-2', 'border-[#22C55E]', 'border-[#F59E0B]', 'border-[#EF4444]', 'bg-[#22C55E]/10', 'bg-[#F59E0B]/10', 'bg-[#EF4444]/10');
-        btn.classList.add('border-[#2A2A2A]', 'bg-[#1A1A1A]');
+        btn.classList.remove('border-2', 'border-[#22C55E]', 'border-[#F59E0B]', 'border-[#EF4444]', 'bg-[#22C55E]/10', 'bg-[#F59E0B]/5', 'bg-[#EF4444]/10');
+        btn.classList.add('border-slate-200', 'bg-white');
       });
 
       // Aplicar estilo activo al seleccionado
       if (gravedad === 'leve') {
-        btnLeve.classList.remove('border-[#2A2A2A]', 'bg-[#1A1A1A]');
+        btnLeve.classList.remove('border-slate-200', 'bg-white');
         btnLeve.classList.add('border-2', 'border-[#22C55E]', 'bg-[#22C55E]/10');
       } else if (gravedad === 'moderado') {
-        btnMod.classList.remove('border-[#2A2A2A]', 'bg-[#1A1A1A]');
-        btnMod.classList.add('border-2', 'border-[#F59E0B]', 'bg-[#F59E0B]/10');
+        btnMod.classList.remove('border-slate-200', 'bg-white');
+        btnMod.classList.add('border-2', 'border-[#F59E0B]', 'bg-[#F59E0B]/5');
       } else if (gravedad === 'grave') {
-        btnGrave.classList.remove('border-[#2A2A2A]', 'bg-[#1A1A1A]');
+        btnGrave.classList.remove('border-slate-200', 'bg-white');
         btnGrave.classList.add('border-2', 'border-[#EF4444]', 'bg-[#EF4444]/10');
       }
+
+      // Cambiar de forma dinámica el color del marcador del mapa
+      actualizarColorPinSolicitud(gravedad);
     }
 
     /**
@@ -445,9 +494,9 @@
       
       const ul = document.getElementById('lista-items-agregados');
       const li = document.createElement('li');
-      li.className = "flex items-center justify-between bg-[#0D0D0D] border border-[#2A2A2A] px-3.5 py-2 rounded-lg text-sm";
+      li.className = "flex items-center justify-between bg-slate-50 border border-slate-200 px-3.5 py-2 rounded-lg text-sm";
       li.innerHTML = `
-        <span class="text-white font-medium">${text}</span>
+        <span class="text-slate-800 font-medium">${text}</span>
         <button type="button" class="text-[#EF4444] hover:text-red-700 p-1 flex items-center justify-center transition-emergency" aria-label="Eliminar ${text}">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
         </button>
@@ -514,7 +563,6 @@
                 reject(new Error("Image blob creation failed"));
                 return;
               }
-              // Si aún supera los 500 KB (512,000 bytes) volvemos a comprimir recursivamente bajando calidad
               if (blob.size > 512000 && quality > 0.3) {
                 resolve(compressImageInCanvas(file, maxWidth - 100, maxHeight - 100, quality - 0.15));
               } else {
@@ -529,7 +577,7 @@
     }
 
     /**
-     * Envia los datos de la solicitud
+     * Envía los datos del formulario a Supabase
      */
     async function enviarSolicitudFormulario(e) {
       e.preventDefault();
@@ -538,6 +586,7 @@
       const nombre = document.getElementById('input-nombre').value.trim();
       const apellido = document.getElementById('input-apellido').value.trim();
       const cedula = document.getElementById('input-cedula').value.trim();
+      const telefono = document.getElementById('input-telefono').value.trim();
       const motivo = document.getElementById('input-motivo').value.trim();
       const gravedad = document.getElementById('input-gravedad').value;
       const direccion = document.getElementById('input-direccion-referencia').value.trim();
@@ -545,6 +594,7 @@
       const coords = getCoordenadasSeleccionadas();
       const errorMap = document.getElementById('error-mapa');
       const errCedula = document.getElementById('error-cedula');
+      const errTelefono = document.getElementById('error-telefono');
       const errMotivo = document.getElementById('error-motivo');
 
       // Validaciones
@@ -556,6 +606,15 @@
         valid = false;
       } else {
         errCedula.classList.add('hidden');
+      }
+
+      // Teléfono: mín 10 caracteres y estructura tlf
+      const regexTlf = /^[0-9+\-\s]{10,}$/;
+      if (!regexTlf.test(telefono)) {
+        errTelefono.classList.remove('hidden');
+        valid = false;
+      } else {
+        errTelefono.classList.add('hidden');
       }
 
       // Motivo: mín 20 caracteres
@@ -580,7 +639,6 @@
       }
 
       if (!valid) {
-        // Scroll hacia arriba para corregir
         window.scrollTo({ top: 100, behavior: 'smooth' });
         return;
       }
@@ -600,12 +658,13 @@
           uploadedFotoUrl = await subirFoto(fotoComprimidaBlob);
         }
 
-        // Crear la solicitud en DB
+        // Crear la solicitud en la base de datos
         const payload = {
           tipo: tipo,
           nombre: nombre,
           apellido: apellido,
           cedula: cedula,
+          telefono: telefono,
           motivo: motivo,
           gravedad: gravedad,
           items: tipo === 'centro_acopio' ? itemsInsumos : [],
@@ -623,7 +682,7 @@
 
       } catch (err) {
         console.error("Error al enviar formulario de solicitud:", err);
-        alert("Ocurrió un error al enviar tu solicitud. Por favor, revisa tu conexión e inténtalo de nuevo.");
+        alert("Ocurrió un error al enviar tu solicitud. Revisa tu conexión de red.");
         
         btnEnviar.disabled = false;
         btnEnviar.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -635,33 +694,25 @@
      * Reiniciar todo el formulario para una nueva entrada
      */
     function cerrarYReiniciar() {
-      // Ocultar modal
       document.getElementById('modal-confirmacion').classList.add('hidden');
-      
-      // Reset formulario
       document.getElementById('form-solicitud').reset();
       
-      // Reset variables de insumos
       itemsInsumos = [];
       document.getElementById('lista-items-agregados').innerHTML = '';
       
-      // Reset foto
       document.getElementById('input-foto').value = '';
       document.getElementById('container-preview-foto').classList.add('hidden');
       document.getElementById('preview-foto').src = '';
       fotoComprimidaBlob = null;
       
-      // Reset gravedad a moderado
       seleccionarGravedad('moderado');
 
-      // Reset estado del botón de envío
       const btnEnviar = document.getElementById('btn-enviar-formulario');
       const textoEnviar = document.getElementById('texto-enviar');
       btnEnviar.disabled = false;
       btnEnviar.classList.remove('opacity-50', 'cursor-not-allowed');
       textoEnviar.innerText = "Publicar Solicitud";
 
-      // Reset mapa
       iniciarMapaSolicitud('mapa-registro');
     }
   </script>
