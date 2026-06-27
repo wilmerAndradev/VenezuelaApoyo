@@ -1,7 +1,6 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "buildCommand": "bash build.sh",
   "rewrites": [
     { "source": "/solicitar", "destination": "/solicitar.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" }
