@@ -101,40 +101,34 @@
       </p>
     </section>
 
-    <!-- 📊 Metrics Section (Tres cuadros de métricas) -->
-    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-      
-      <!-- Métricas 1: Activas -->
-      <div class="bg-white border-l-4 border-l-[#F5C400] border-y border-r border-slate-200 p-4 rounded-lg shadow-sm flex items-center gap-4">
-        <div class="w-10 h-10 bg-[#F5C400]/10 text-[#F5C400] rounded-full flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+    <!-- 📊 Metrics Section — siempre 3 columnas horizontales -->
+    <section class="grid grid-cols-3 gap-2 sm:gap-4 mb-8">
+
+      <!-- Métrica 1: Activas (Amarillo) -->
+      <div class="bg-[#FFFBEB] border border-[#F59E0B] rounded-xl p-3 sm:p-4 flex flex-col items-center text-center shadow-sm">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-[#F59E0B] text-white rounded-full flex items-center justify-center mb-2 shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
         </div>
-        <div>
-          <span class="block text-2xl font-bold text-slate-900 leading-none" id="metric-activas">...</span>
-          <span class="text-xs text-slate-500 font-medium">Solicitudes Activas</span>
-        </div>
+        <span class="block text-2xl sm:text-3xl font-bold text-slate-900 leading-none" id="metric-activas">...</span>
+        <span class="text-[10px] sm:text-xs text-slate-600 font-semibold mt-1 leading-tight">Activas</span>
       </div>
 
-      <!-- Métricas 2: Urgentes SOS -->
-      <div class="bg-white border-l-4 border-l-[#EF4444] border-y border-r border-slate-200 p-4 rounded-lg shadow-sm flex items-center gap-4">
-        <div class="w-10 h-10 bg-[#EF4444]/10 text-[#EF4444] rounded-full flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+      <!-- Métrica 2: Urgentes SOS (Rojo) -->
+      <div class="bg-[#FEF2F2] border border-[#EF4444] rounded-xl p-3 sm:p-4 flex flex-col items-center text-center shadow-sm">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-[#EF4444] text-white rounded-full flex items-center justify-center mb-2 shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
         </div>
-        <div>
-          <span class="block text-2xl font-bold text-slate-900 leading-none" id="metric-urgentes">...</span>
-          <span class="text-xs text-slate-500 font-medium">Casos SOS / Urgentes</span>
-        </div>
+        <span class="block text-2xl sm:text-3xl font-bold text-slate-900 leading-none" id="metric-urgentes">...</span>
+        <span class="text-[10px] sm:text-xs text-slate-600 font-semibold mt-1 leading-tight">SOS / Urgentes</span>
       </div>
 
-      <!-- Métricas 3: Solventadas -->
-      <div class="bg-white border-l-4 border-l-[#22C55E] border-y border-r border-slate-200 p-4 rounded-lg shadow-sm flex items-center gap-4">
-        <div class="w-10 h-10 bg-[#22C55E]/10 text-[#22C55E] rounded-full flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-13.3 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      <!-- Métrica 3: Resueltas (Verde) -->
+      <div class="bg-[#F0FDF4] border border-[#22C55E] rounded-xl p-3 sm:p-4 flex flex-col items-center text-center shadow-sm">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-[#22C55E] text-white rounded-full flex items-center justify-center mb-2 shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <div>
-          <span class="block text-2xl font-bold text-slate-900 leading-none" id="metric-resueltas">...</span>
-          <span class="text-xs text-slate-500 font-medium">Solicitudes Resueltas</span>
-        </div>
+        <span class="block text-2xl sm:text-3xl font-bold text-slate-900 leading-none" id="metric-resueltas">...</span>
+        <span class="text-[10px] sm:text-xs text-slate-600 font-semibold mt-1 leading-tight">Resueltas</span>
       </div>
 
     </section>
