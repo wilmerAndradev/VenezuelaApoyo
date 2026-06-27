@@ -1,6 +1,9 @@
 # AcopioVE 🇻🇪
 App de gestión de solicitudes para centros de acopio - Ecosistema AyudaVenezuela
 
+## Producción
+La aplicación está desplegada en producción en: [https://acopio.ayudavenezuela.com](https://acopio.ayudavenezuela.com)
+
 ## Descripción
 Aplicación móvil y de bajo ancho de banda para coordinar el acopio y distribución de ayuda humanitaria e insumos ante la emergencia por el terremoto en Venezuela, permitiendo a los centros de acopio e individuos registrar sus necesidades en tiempo real.
 
