@@ -1,1 +1,114 @@
-/* acopio.css */
+/* acopio.css - Estilos específicos para la aplicación AcopioVE */
+
+/* Tarjetas de Selección de Rol */
+.card-role {
+  background-color: var(--color-card);
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  padding: 24px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: border-color 200ms ease, background-color 200ms ease;
+  min-height: 220px;
+}
+
+.card-role:hover, .card-role:focus-within {
+  border-color: var(--color-secondary);
+  background-color: #222222;
+}
+
+/* Botones Táctiles de Emergencia */
+.btn-emergency-primary {
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  font-weight: 700;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 24px;
+  min-height: 48px;
+  border: 2px solid transparent;
+  transition: background-color 200ms ease;
+  text-align: center;
+}
+
+.btn-emergency-primary:hover {
+  background-color: #b01024; /* Rojo más oscuro para hover */
+}
+
+.btn-emergency-secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  font-weight: 500;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 24px;
+  min-height: 48px;
+  border: 2px solid var(--color-border);
+  transition: background-color 200ms ease, border-color 200ms ease;
+  text-align: center;
+}
+
+.btn-emergency-secondary:hover {
+  background-color: var(--color-card);
+  border-color: var(--color-muted);
+}
+
+.btn-emergency-warning {
+  background-color: var(--color-secondary);
+  color: var(--color-bg);
+  font-weight: 700;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 24px;
+  min-height: 48px;
+  border: 2px solid transparent;
+  transition: background-color 200ms ease;
+  text-align: center;
+}
+
+.btn-emergency-warning:hover {
+  background-color: #dcb000;
+}
+
+/* Badges de Gravedad */
+.badge-severe {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--color-grave);
+  border: 1px solid var(--color-grave);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.badge-moderate {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--color-moderado);
+  border: 1px solid var(--color-moderado);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.badge-mild {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: var(--color-leve);
+  border: 1px solid var(--color-leve);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+}

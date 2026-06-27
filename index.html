@@ -1,1 +1,224 @@
-<!-- index.html -->
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AyudaVenezuela | AcopioVE</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Plataforma de respuesta humanitaria para conectar centros de acopio y reportar emergencias por el terremoto en Venezuela.">
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Configuración de Tailwind para Paleta AcopioVE -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bgMain: '#0D0D0D',
+            bgCard: '#1A1A1A',
+            borderCol: '#2A2A2A',
+            textMain: '#F0F0F0',
+            textMuted: '#9CA3AF',
+            primary: '#CF142B',
+            secondary: '#F5C400',
+            grave: '#EF4444',
+            moderado: '#F59E0B',
+            leve: '#22C55E'
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Estilos Globales Compartidos -->
+  <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="acopio.css">
+
+  <style>
+    /* Animación de pulso personalizada para el badge de emergencia */
+    @keyframes pulse-emergency {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.03); }
+    }
+    .pulse-emergency {
+      animation: pulse-emergency 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-bgMain text-textMain min-h-full flex flex-col font-sans selection:bg-primary selection:text-white">
+
+  <!-- Header Global -->
+  <header class="border-b border-borderCol bg-bgMain py-4 px-6 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+      <div class="flex items-center gap-2">
+        <!-- Logo con Texto Estilizado -->
+        <span class="text-2xl font-bold tracking-tight text-primary">Ayuda<span class="text-secondary">Venezuela</span></span>
+      </div>
+      <p class="text-sm font-medium text-textMuted tracking-wide uppercase">Plataforma de respuesta humanitaria</p>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal (Mobile-First) -->
+  <main class="flex-grow flex flex-col items-center justify-center px-4 py-8 sm:py-12 max-w-4xl mx-auto w-full">
+    
+    <!-- Hero / Alerta -->
+    <div class="text-center mb-8 sm:mb-12">
+      <!-- Badge de Emergencia Parpadeante -->
+      <div class="inline-flex items-center gap-2 bg-red-950/40 border border-grave px-4 py-2 rounded-full mb-6 pulse-emergency">
+        <span class="w-2.5 h-2.5 rounded-full bg-grave animate-ping"></span>
+        <span class="text-grave text-sm font-bold tracking-wider uppercase">🔴 EMERGENCIA ACTIVA</span>
+      </div>
+      
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-textMain mb-4">
+        Venezuela necesita tu ayuda
+      </h1>
+      <p class="text-base sm:text-lg md:text-xl text-textMuted max-w-xl mx-auto font-normal">
+        Conectamos centros de acopio con personas dispuestas a ayudar. Reporta necesidades o solicita asistencia de forma rápida y sencilla.
+      </p>
+    </div>
+
+    <!-- Cards de Selección de Rol (1 columna en mobile, 2 en desktop) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-10">
+      
+      <!-- CARD A: Centro de Acopio -->
+      <a href="solicitar.html?tipo=centro_acopio" class="card-role flex flex-col justify-between focus-within:ring-2 focus-within:ring-secondary group" aria-label="Soy Centro de Acopio, registrar necesidades">
+        <div class="flex flex-col items-center">
+          <div class="w-16 h-16 rounded-full bg-[#1e1a0b] border border-secondary/30 flex items-center justify-center text-secondary mb-6 group-hover:scale-105 transition-transform duration-200">
+            <!-- Icono Caja/Almacén SVG Inline -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+            </svg>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-textMain mb-3">Soy Centro de Acopio</h2>
+          <p class="text-textMuted text-base mb-6 leading-relaxed">
+            Registra tu centro y publica la lista de insumos de emergencia que necesitas recolectar con urgencia.
+          </p>
+        </div>
+        <div class="btn-emergency-warning w-full text-base">
+          <span>Registrar necesidades</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </div>
+      </a>
+
+      <!-- CARD B: Individuo / SOS -->
+      <a href="solicitar.html?tipo=individuo" class="card-role flex flex-col justify-between focus-within:ring-2 focus-within:ring-primary group" aria-label="Necesito Ayuda Urgente, reportar situación de emergencia">
+        <div class="flex flex-col items-center">
+          <div class="w-16 h-16 rounded-full bg-[#200b0c] border border-primary/30 flex items-center justify-center text-primary mb-6 group-hover:scale-105 transition-transform duration-200">
+            <!-- Icono Persona/SOS SVG Inline -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.05 4.575a1.5 1.5 0 00-2.1 0l-5.625 5.625a1.5 1.5 0 000 2.1l5.625 5.625a1.5 1.5 0 002.1 0l5.625-5.625a1.5 1.5 0 000-2.1L10.05 4.575z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3.75h.008v.008H12v-.008z" />
+            </svg>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-textMain mb-3">Necesito Ayuda Urgente</h2>
+          <p class="text-textMuted text-base mb-6 leading-relaxed">
+            Reporta tu situación de emergencia personal o la de tu comunidad para recibir ayuda inmediata.
+          </p>
+        </div>
+        <div class="btn-emergency-primary w-full text-base">
+          <span>Pedir ayuda ahora</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Botón Secundario Centrado -->
+    <div class="text-center mb-10 w-full px-4">
+      <a href="dashboard.html" class="btn-emergency-secondary w-full sm:w-auto text-base">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
+        </svg>
+        <span>Ver todas las solicitudes activas</span>
+      </a>
+    </div>
+
+    <!-- Counter Dinámico -->
+    <div class="bg-bgCard border border-borderCol rounded-xl p-6 text-center max-w-sm w-full mx-auto shadow-inner">
+      <div id="counter-loader" class="flex items-center justify-center gap-3">
+        <!-- Spinner -->
+        <svg class="animate-spin h-5 w-5 text-secondary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span class="text-sm text-textMuted font-medium">Cargando reportes activos...</span>
+      </div>
+      
+      <div id="counter-display" class="hidden">
+        <span id="counter-value" class="text-3xl font-bold text-secondary tracking-tight">0</span>
+        <p class="text-sm font-semibold tracking-wide text-textMuted uppercase mt-1">Solicitudes activas ahora mismo</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer Global -->
+  <footer class="border-t border-borderCol bg-bgMain py-6 px-6 text-center">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-textMuted">
+      <p>AyudaVenezuela 2026 | Aplicación de emergencia humanitaria</p>
+      <div class="flex gap-4">
+        <span class="text-xs px-2 py-1 rounded bg-[#2A2A2A] border border-[#3A3A3A] font-bold text-[#22C55E]">BAJO ANCHO DE BANDA OK</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- Lógica y configuración propia -->
+  <script src="config.js"></script>
+  <script src="supabase.js"></script>
+
+  <script>
+    // Inicializar el contador de solicitudes
+    document.addEventListener('DOMContentLoaded', async () => {
+      const loader = document.getElementById('counter-loader');
+      const display = document.getElementById('counter-display');
+      const counterVal = document.getElementById('counter-value');
+
+      try {
+        // Asegurar que el backend haya inicializado
+        if (typeof window.inicializarSupabase === 'function') {
+          window.inicializarSupabase();
+        }
+
+        if (typeof window.obtenerEstadisticas === 'function') {
+          const stats = await window.obtenerEstadisticas();
+          
+          if (stats && typeof stats.total !== 'undefined') {
+            counterVal.textContent = stats.total;
+          } else {
+            counterVal.textContent = "0";
+          }
+        } else {
+          console.warn('obtenerEstadisticas no está disponible, usando fallback 0');
+          counterVal.textContent = "0";
+        }
+      } catch (err) {
+        console.error('Error al cargar estadísticas en landing:', err);
+        counterVal.textContent = "0";
+      } finally {
+        if (loader && display) {
+          loader.classList.add('hidden');
+          display.classList.remove('hidden');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

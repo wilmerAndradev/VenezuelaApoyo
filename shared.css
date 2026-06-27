@@ -1,1 +1,49 @@
-/* shared.css */
+/* shared.css - Estilos Globales Ecosistema AyudaVenezuela */
+
+/* Importar tipografía Inter desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+:root {
+  --color-bg: #0D0D0D;
+  --color-primary: #CF142B;
+  --color-secondary: #F5C400;
+  --color-text: #F0F0F0;
+  --color-muted: #9CA3AF;
+  --color-card: #1A1A1A;
+  --color-border: #2A2A2A;
+  
+  --color-grave: #EF4444;
+  --color-moderado: #F59E0B;
+  --color-leve: #22C55E;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Forzar tamaño de texto mínimo para emergencias (body) */
+body, p, li, button, input, select, textarea {
+  font-size: 16px; /* 1rem = 16px */
+}
+
+/* Estilo de enfoque de alta visibilidad para accesibilidad (WCAG AA) */
+*:focus-visible {
+  outline: 3px solid var(--color-secondary) !important;
+  outline-offset: 3px !important;
+}
+
+/* Transiciones optimizadas de 200ms máximo */
+.transition-emergency {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
