@@ -182,3 +182,27 @@ async function subirFoto(archivo) {
 
   return publicUrlData.publicUrl;
 }
+
+/**
+ * Marca una solicitud como resuelta/realizada (activo = false).
+ * @param {string} id - UUID de la solicitud.
+ * @returns {Promise<Object>} Fila actualizada.
+ */
+async function marcarResuelta(id) {
+  const client = getSupabaseClient();
+  if (!client) throw new Error("Supabase no inicializado");
+
+  const { data, error } = await client
+    .from('solicitudes')
+    .update({ activo: false })
+    .eq('id', id)
+    .select();
+
+  if (error) {
+    console.error("Error al marcar como resuelta:", error);
+    throw error;
+  }
+
+  return data[0];
+}
+
