@@ -5,408 +5,479 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registrar Solicitud — AcopioVE</title>
   
-  <!-- CDNs obligatorios del proyecto -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Registra necesidades de insumos para centros de acopio e individuos afectados en Venezuela.">
+  <meta name="theme-color" content="#0D0D0D">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   
   <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  
-  <!-- Configuración de Tailwind para usar la paleta de colores del proyecto -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            venezuela: {
-              bg: '#0D0D0D',
-              card: '#1A1A1A',
-              border: '#2A2A2A',
-              text: '#F0F0F0',
-              muted: '#9CA3AF',
-              primary: '#CF142B',
-              secondary: '#F5C400',
-              grave: '#EF4444',
-              moderado: '#F59E0B',
-              leve: '#22C55E'
-            }
-          },
           fontFamily: {
-            sans: ['Inter', 'sans-serif']
-          }
+            sans: ['Inter', 'sans-serif'],
+          },
         }
       }
     }
   </script>
-  
-  <!-- Estilos globales y específicos del proyecto -->
+
+  <!-- Estilos compartidos y de acopio -->
   <link rel="stylesheet" href="shared.css">
   <link rel="stylesheet" href="acopio.css">
-  
+
   <style>
-    /* Estilos del contenedor del mapa */
-    #mapa-solicitud {
-      height: 320px;
-      border-radius: 8px;
-      border: 1px solid var(--color-border);
-      background: #1A1A1A;
+    body {
+      background-color: #0D0D0D !important;
+      color: #F0F0F0 !important;
     }
-    
-    /* Personalización de botones de Gravedad */
-    .btn-severity {
-      border: 2px solid var(--color-border);
-      background-color: var(--color-card);
-      transition: all 150ms ease;
+    input, select, textarea {
+      background-color: #1A1A1A !important;
+      border-color: #2A2A2A !important;
+      color: #F0F0F0 !important;
     }
-    
-    .btn-severity-active-grave {
-      border-color: var(--color-grave) !important;
-      background-color: rgba(239, 68, 68, 0.1) !important;
-      color: var(--color-grave) !important;
+    input:focus, select:focus, textarea:focus {
+      border-color: #F5C400 !important;
+      outline: none;
     }
-    
-    .btn-severity-active-moderado {
-      border-color: var(--color-moderado) !important;
-      background-color: rgba(245, 158, 11, 0.1) !important;
-      color: var(--color-moderado) !important;
-    }
-    
-    .btn-severity-active-leve {
-      border-color: var(--color-leve) !important;
-      background-color: rgba(34, 197, 94, 0.1) !important;
-      color: var(--color-leve) !important;
+    /* Estilos personalizados para los botones de Gravedad */
+    .gravity-btn {
+      transition: all 200ms ease;
     }
   </style>
-  
-  <!-- SDK de Supabase y Scripts de la App -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
-<body class="bg-venezuela-bg text-venezuela-text flex flex-col min-h-screen">
+<body class="min-h-screen flex flex-col justify-between font-sans">
 
   <!-- Header -->
-  <header class="border-b border-venezuela-border py-4 px-6 sticky top-0 bg-venezuela-bg/95 z-50 backdrop-blur">
-    <div class="max-w-3xl mx-auto flex justify-between items-center">
-      <a href="index.html" class="text-sm font-bold text-venezuela-muted hover:text-white flex items-center gap-1.5 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-        </svg>
-        Volver
+  <header class="border-b border-[#2A2A2A] bg-[#0D0D0D]/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex flex-col">
+        <a href="index.html" class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+          <span class="text-[#CF142B]">Ayuda</span><span class="text-[#F5C400]">Venezuela</span>
+        </a>
+        <span class="text-[11px] text-[#9CA3AF] tracking-wider uppercase font-medium">Plataforma de respuesta humanitaria</span>
+      </div>
+      <a href="index.html" class="text-xs bg-[#1A1A1A] border border-[#2A2A2A] text-white px-3 py-1.5 rounded-md hover:bg-[#222] transition-emergency min-h-[38px] flex items-center justify-center font-medium">
+        Volver Inicio
       </a>
-      <div id="header-badge" class="text-xs px-2.5 py-1 rounded font-bold uppercase border"></div>
     </div>
   </header>
 
-  <!-- Formulario Principal -->
-  <main class="flex-grow max-w-2xl mx-auto w-full px-6 py-8">
-    <h1 id="form-title" class="text-3xl font-bold text-white mb-8">Registrar Solicitud</h1>
+  <!-- Main Content -->
+  <main class="max-w-2xl mx-auto px-4 py-8 w-full flex-1">
     
-    <form id="formulario-solicitud" onsubmit="enviarFormulario(event)" class="space-y-6">
+    <div class="mb-6">
+      <h1 class="text-2xl md:text-3xl font-bold text-white mb-2">Registrar Requerimiento</h1>
+      <p class="text-sm text-[#9CA3AF]">
+        Completa el formulario para publicar tus necesidades de insumos o asistencia en el mapa público.
+      </p>
+    </div>
+
+    <!-- Formulario de Solicitud -->
+    <form id="form-solicitud" class="space-y-6 bg-[#1A1A1A] border border-[#2A2A2A] p-6 rounded-xl shadow-lg">
       
-      <!-- Campos de texto básicos (Nombre/Apellido) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- Selector de Rol (Tipo) -->
+      <div>
+        <label for="input-tipo" class="block text-sm font-semibold text-white mb-2">Tipo de Solicitante <span class="text-[#CF142B]">*</span></label>
+        <select id="input-tipo" name="tipo" class="w-full p-3 rounded-lg border text-base" required>
+          <option value="centro_acopio">🏡 Centro de Acopio (Organización / Almacén)</option>
+          <option value="individuo">🚨 Individuo Afectado (Caso Familiar / Personal)</option>
+        </select>
+      </div>
+
+      <!-- Datos Personales / Representante -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label for="nombre" class="block text-sm font-medium text-venezuela-muted mb-1.5">Nombre <span class="text-venezuela-primary">*</span></label>
-          <input type="text" id="nombre" name="nombre" class="w-full bg-venezuela-card border border-venezuela-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-venezuela-secondary transition-colors" placeholder="Ej: Juan">
-          <span id="error-nombre" class="text-xs text-venezuela-primary mt-1 hidden block"></span>
+          <label for="input-nombre" class="block text-sm font-semibold text-white mb-1">Nombre del Responsable <span class="text-[#CF142B]">*</span></label>
+          <input type="text" id="input-nombre" name="nombre" class="w-full p-3 rounded-lg border text-base" placeholder="Ej. Juan" required>
         </div>
         <div>
-          <label for="apellido" class="block text-sm font-medium text-venezuela-muted mb-1.5">Apellido <span class="text-venezuela-primary">*</span></label>
-          <input type="text" id="apellido" name="apellido" class="w-full bg-venezuela-card border border-venezuela-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-venezuela-secondary transition-colors" placeholder="Ej: Pérez">
-          <span id="error-apellido" class="text-xs text-venezuela-primary mt-1 hidden block"></span>
+          <label for="input-apellido" class="block text-sm font-semibold text-white mb-1">Apellido del Responsable <span class="text-[#CF142B]">*</span></label>
+          <input type="text" id="input-apellido" name="apellido" class="w-full p-3 rounded-lg border text-base" placeholder="Ej. Pérez" required>
         </div>
       </div>
 
-      <!-- Cédula de Identidad -->
+      <!-- Cédula -->
       <div>
-        <label for="cedula" class="block text-sm font-medium text-venezuela-muted mb-1.5">Cédula de Identidad <span class="text-venezuela-primary">*</span></label>
-        <input type="text" id="cedula" name="cedula" class="w-full bg-venezuela-card border border-venezuela-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-venezuela-secondary transition-colors" placeholder="Solo números, mínimo 6 dígitos (Ej: 12345678)">
-        <span id="error-cedula" class="text-xs text-venezuela-primary mt-1 hidden block"></span>
+        <label for="input-cedula" class="block text-sm font-semibold text-white mb-1">Número de Cédula (Solo Números) <span class="text-[#CF142B]">*</span></label>
+        <input type="text" id="input-cedula" name="cedula" inputmode="numeric" pattern="[0-9]*" class="w-full p-3 rounded-lg border text-base" placeholder="Ej. 12345678" required>
+        <span id="error-cedula" class="text-xs text-[#EF4444] mt-1 hidden">La cédula debe contener solo números (mínimo 6 dígitos).</span>
       </div>
 
       <!-- Motivo / Descripción -->
       <div>
-        <label for="motivo" class="block text-sm font-medium text-venezuela-muted mb-1.5">Motivo / Descripción de la Situación <span class="text-venezuela-primary">*</span></label>
-        <textarea id="motivo" name="motivo" rows="4" class="w-full bg-venezuela-card border border-venezuela-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-venezuela-secondary transition-colors" placeholder="Describe detalladamente tu situación..."></textarea>
-        <span id="error-motivo" class="text-xs text-venezuela-primary mt-1 hidden block"></span>
+        <label for="input-motivo" class="block text-sm font-semibold text-white mb-1">Motivo / Descripción de la Situación <span class="text-[#CF142B]">*</span></label>
+        <textarea id="input-motivo" name="motivo" rows="4" minlength="20" class="w-full p-3 rounded-lg border text-base leading-relaxed" placeholder="Describe brevemente la situación de emergencia y qué asistencia necesitas (mínimo 20 caracteres)..." required></textarea>
+        <span id="error-motivo" class="text-xs text-[#EF4444] mt-1 hidden">Por favor describe tu situación con más detalle (mínimo 20 caracteres).</span>
       </div>
 
-      <!-- Selector de Gravedad (Botones de tipo Toggle) -->
+      <!-- Selector de Gravedad -->
       <div>
-        <label class="block text-sm font-medium text-venezuela-muted mb-2">Nivel de Gravedad / Urgencia <span class="text-venezuela-primary">*</span></label>
+        <label class="block text-sm font-semibold text-white mb-2">Nivel de Gravedad / Urgencia <span class="text-[#CF142B]">*</span></label>
+        <input type="hidden" id="input-gravedad" name="gravedad" value="moderado">
+        
         <div class="grid grid-cols-3 gap-3">
-          <button type="button" onclick="seleccionarGravedad('leve')" id="btn-grav-leve" class="btn-severity py-3.5 px-4 rounded-lg font-bold text-sm text-venezuela-muted text-center cursor-pointer min-h-[48px] flex items-center justify-center">
-            LEVE
-          </button>
-          <button type="button" onclick="seleccionarGravedad('moderado')" id="btn-grav-moderado" class="btn-severity py-3.5 px-4 rounded-lg font-bold text-sm text-venezuela-muted text-center cursor-pointer min-h-[48px] flex items-center justify-center">
-            MODERADO
-          </button>
-          <button type="button" onclick="seleccionarGravedad('grave')" id="btn-grav-grave" class="btn-severity py-3.5 px-4 rounded-lg font-bold text-sm text-venezuela-muted text-center cursor-pointer min-h-[48px] flex items-center justify-center">
-            GRAVE / SOS
-          </button>
-        </div>
-        <input type="hidden" id="gravedad" name="gravedad">
-        <span id="error-gravedad" class="text-xs text-venezuela-primary mt-1.5 hidden block"></span>
-      </div>
-
-      <!-- Lista de Ítems (Solo para Centros de Acopio) -->
-      <div id="seccion-items" class="hidden">
-        <label class="block text-sm font-medium text-venezuela-muted mb-1.5">Insumos Requeridos <span class="text-venezuela-primary">*</span></label>
-        <div class="flex gap-2 mb-3">
-          <input type="text" id="input-item" class="flex-grow bg-venezuela-card border border-venezuela-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-venezuela-secondary transition-colors" placeholder="Ej: Agua mineral de 1.5L">
-          <button type="button" onclick="agregarItem()" class="px-5 bg-venezuela-secondary text-venezuela-bg font-bold rounded-lg hover:bg-yellow-500 transition-colors min-h-[48px] flex items-center justify-center">+</button>
-        </div>
-        <div id="items-container" class="flex flex-wrap gap-2 py-2">
-          <!-- Los chips se insertan dinámicamente aquí -->
-        </div>
-        <span id="error-items" class="text-xs text-venezuela-primary mt-1 hidden block"></span>
-      </div>
-
-      <!-- Foto (Opcional) -->
-      <div>
-        <label class="block text-sm font-medium text-venezuela-muted mb-1.5">Foto de la zona o del centro (Opcional)</label>
-        <div class="flex items-center gap-4">
-          <input type="file" id="foto-input" accept="image/jpeg, image/png, image/webp" onchange="previewFoto(event)" class="hidden">
-          <button type="button" onclick="document.getElementById('foto-input').click()" class="btn-emergency-secondary px-4 py-2 border border-venezuela-border text-white hover:bg-venezuela-card font-medium transition-colors text-sm">
-            Adjuntar imagen
+          <!-- Leve -->
+          <button type="button" onclick="seleccionarGravedad('leve')" id="btn-gravedad-leve" class="gravity-btn p-3 rounded-lg border border-[#2A2A2A] text-sm font-bold flex flex-col items-center justify-center gap-1 bg-[#1A1A1A] hover:bg-green-500/10">
+            <span class="w-3 h-3 rounded-full bg-[#22C55E]"></span>
+            <span class="text-[#22C55E]">LEVE</span>
           </button>
           
-          <div id="foto-preview-container" class="hidden relative w-20 h-20 border border-venezuela-border rounded overflow-hidden">
-            <img id="foto-preview" class="w-full h-full object-cover" src="#" alt="Vista previa">
-            <button type="button" onclick="eliminarFoto()" class="absolute top-0 right-0 bg-red-600/90 text-white w-5 h-5 flex items-center justify-center rounded-bl font-bold text-xs">×</button>
-          </div>
-          <span id="foto-info" class="text-xs text-venezuela-muted italic">Formatos: JPEG, PNG, WebP. Se comprimirá automáticamente a máx 500kb.</span>
+          <!-- Moderado -->
+          <button type="button" onclick="seleccionarGravedad('moderado')" id="btn-gravedad-moderado" class="gravity-btn p-3 rounded-lg border-2 border-[#F59E0B] text-sm font-bold flex flex-col items-center justify-center gap-1 bg-[#F59E0B]/10">
+            <span class="w-3 h-3 rounded-full bg-[#F59E0B]"></span>
+            <span class="text-[#F59E0B]">MODERADO</span>
+          </button>
+          
+          <!-- Grave -->
+          <button type="button" onclick="seleccionarGravedad('grave')" id="btn-gravedad-grave" class="gravity-btn p-3 rounded-lg border border-[#2A2A2A] text-sm font-bold flex flex-col items-center justify-center gap-1 bg-[#1A1A1A] hover:bg-red-500/10">
+            <span class="w-3 h-3 rounded-full bg-[#EF4444]"></span>
+            <span class="text-[#EF4444]">GRAVE (SOS)</span>
+          </button>
         </div>
       </div>
 
-      <!-- Mapa y Ubicación -->
-      <div>
-        <div class="flex justify-between items-center mb-2">
-          <label class="block text-sm font-medium text-venezuela-muted">Marcar Ubicación en el Mapa <span class="text-venezuela-primary">*</span></label>
-          <!-- Botón de GPS externo vinculable -->
-          <button type="button" id="btn-gps" class="text-xs font-bold text-venezuela-secondary hover:underline flex items-center gap-1">
-            📍 Obtener mi GPS
+      <!-- Insumos / Lista de Items (Solo para Centro de Acopio) -->
+      <div id="seccion-items">
+        <label class="block text-sm font-semibold text-white mb-1">Listado de Insumos Requeridos <span class="text-[#CF142B]">*</span></label>
+        <p class="text-xs text-[#9CA3AF] mb-2">Ingresa uno a uno los insumos prioritarios (ej. Agua potable, Gasas, etc.).</p>
+        
+        <div class="flex gap-2">
+          <input type="text" id="input-nuevo-item" class="flex-1 p-3 rounded-lg border text-base" placeholder="Ej. Medicamentos de primeros auxilios">
+          <button type="button" id="btn-agregar-item" class="bg-[#1A1A1A] border-2 border-[#2A2A2A] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#222] min-h-[48px] flex items-center justify-center">
+            Agregar
           </button>
         </div>
+        <span id="error-items" class="text-xs text-[#EF4444] mt-1 hidden">Debes agregar al menos 1 insumo requerido para centros de acopio.</span>
         
-        <!-- Div del Mapa Leaflet -->
-        <div id="mapa-solicitud" class="mb-3"></div>
-        <p class="text-xs text-venezuela-muted leading-relaxed mb-3">
-          Haz clic en el mapa para colocar el pin de coordenadas exactas. El pin se puede arrastrar para refinar.
-        </p>
+        <!-- Contenedor de la lista dinámica -->
+        <ul id="lista-items-agregados" class="mt-3 space-y-1.5 max-h-48 overflow-y-auto">
+          <!-- Items dinámicos aquí -->
+        </ul>
+      </div>
 
-        <!-- Hidden inputs de coordenadas -->
-        <input type="hidden" id="lat" name="lat">
-        <input type="hidden" id="lng" name="lng">
-        <input type="hidden" id="direccion" name="direccion">
+      <!-- Mapa interactivo de Geolocalización -->
+      <div>
+        <label class="block text-sm font-semibold text-white mb-1">Ubicación Geográfica <span class="text-[#CF142B]">*</span></label>
+        <p class="text-xs text-[#9CA3AF] mb-3">Haz clic en el mapa para marcar tu ubicación exacta o pulsa "Mi Ubicación" (GPS).</p>
         
-        <!-- Dirección Autocompletada de Nominatim -->
-        <div id="direccion_autocompletada" class="text-xs text-emerald-400 mt-2 font-medium bg-emerald-500/10 border border-emerald-500/20 rounded p-2.5 hidden"></div>
-        <span id="error-coordenadas" class="text-xs text-venezuela-primary mt-1 hidden block"></span>
+        <!-- Div del mapa -->
+        <div class="relative w-full border border-[#2A2A2A] rounded-lg overflow-hidden mb-3">
+          <div id="mapa-registro" class="w-full h-72 z-0"></div>
+        </div>
 
-        <!-- Dirección de Referencia Adicional -->
-        <div class="mt-4">
-          <label for="direccion_referencia" class="block text-sm font-medium text-venezuela-muted mb-1.5">Dirección de Referencia / Punto de Encuentro</label>
-          <textarea id="direccion_referencia" name="direccion_referencia" rows="2" class="w-full bg-venezuela-card border border-venezuela-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-venezuela-secondary transition-colors" placeholder="Ej: Frente a la plaza Bolívar, casa de color verde con rejas blancas..."></textarea>
+        <div class="grid grid-cols-2 gap-4 mb-3">
+          <div>
+            <label class="block text-[11px] text-[#9CA3AF] uppercase font-bold mb-0.5">Latitud</label>
+            <input type="text" id="input-latitud" readonly class="w-full p-2.5 rounded-lg border text-sm opacity-70 cursor-not-allowed">
+          </div>
+          <div>
+            <label class="block text-[11px] text-[#9CA3AF] uppercase font-bold mb-0.5">Longitud</label>
+            <input type="text" id="input-longitud" readonly class="w-full p-2.5 rounded-lg border text-sm opacity-70 cursor-not-allowed">
+          </div>
+        </div>
+
+        <div>
+          <label for="input-direccion-referencia" class="block text-sm font-semibold text-white mb-1">Dirección de Referencia <span class="text-[#CF142B]">*</span></label>
+          <textarea id="input-direccion-referencia" name="direccion_referencia" rows="2" class="w-full p-3 rounded-lg border text-sm" placeholder="Dirección aproximada y puntos de referencia cercanos (ej. Frente a la Plaza Bolívar)..." required></textarea>
+        </div>
+        <span id="error-mapa" class="text-xs text-[#EF4444] mt-1 hidden">Debes marcar tu ubicación en el mapa.</span>
+      </div>
+
+      <!-- Adjuntar foto con Canvas Compresión -->
+      <div>
+        <label for="input-foto" class="block text-sm font-semibold text-white mb-1">Adjuntar Foto de la Situación (Opcional)</label>
+        <p class="text-xs text-[#9CA3AF] mb-3">La imagen será comprimida localmente a menos de 500 KB para conexiones lentas.</p>
+        
+        <input type="file" id="input-foto" accept="image/*" class="w-full p-2 bg-[#1A1A1A] text-sm text-[#9CA3AF] border border-[#2A2A2A] rounded-lg file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#2A2A2A] file:text-white hover:file:bg-[#333]">
+        
+        <!-- Preview de Imagen -->
+        <div id="container-preview-foto" class="mt-3 hidden">
+          <div class="relative inline-block border border-[#2A2A2A] rounded-lg overflow-hidden">
+            <img id="preview-foto" src="" class="max-h-40 object-contain" alt="Vista previa de la foto">
+            <button type="button" id="btn-eliminar-foto" class="absolute top-1.5 right-1.5 bg-black/75 hover:bg-black text-white p-1 rounded-full">
+              <!-- Cruz SVG -->
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Botón de Envío -->
-      <button type="submit" id="btn-submit" class="w-full py-4 bg-venezuela-primary text-white font-bold rounded-lg hover:bg-red-700 hover:scale-[1.01] active:scale-[0.99] transition-all min-h-[48px] flex items-center justify-center gap-2 text-base">
-        Enviar solicitud de ayuda
-      </button>
-
-      <!-- Mensaje de error general -->
-      <div id="error-general" class="hidden p-4 rounded bg-red-950/40 border border-red-800 text-red-400 text-sm leading-relaxed"></div>
+      <div class="pt-4">
+        <button type="submit" id="btn-enviar-formulario" class="btn-emergency-primary w-full text-base font-bold min-h-[50px]">
+          <!-- Icono Guardar SVG -->
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+          <span id="texto-enviar">Publicar Solicitud</span>
+        </button>
+      </div>
 
     </form>
+
   </main>
 
-  <!-- Modal de Éxito -->
-  <div id="modal-exito" class="fixed inset-0 bg-black/85 flex items-center justify-center p-6 z-[9999] hidden backdrop-blur-sm">
-    <div class="bg-venezuela-card border border-venezuela-border rounded-xl p-8 max-w-md w-full text-center shadow-2xl">
-      <div class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto mb-6">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-        </svg>
-      </div>
+  <!-- Modal de Confirmación Exitoso -->
+  <div id="modal-confirmacion" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden px-4">
+    <div class="bg-[#1A1A1A] border-2 border-[#2A2A2A] p-6 rounded-xl max-w-md w-full shadow-2xl text-center">
       
-      <h2 class="text-2xl font-bold text-white mb-2">Solicitud Publicada</h2>
-      <p class="text-venezuela-muted text-sm mb-4 leading-relaxed">
-        Los datos se han guardado correctamente y la solicitud ya está activa en el sistema.
+      <div class="w-16 h-16 bg-green-500/10 border border-green-500/30 text-[#22C55E] rounded-full flex items-center justify-center mx-auto mb-4">
+        <!-- Tick SVG -->
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+      </div>
+
+      <h2 class="text-2xl font-bold text-white mb-2">¡Solicitud Registrada!</h2>
+      <p class="text-sm text-[#9CA3AF] mb-4">
+        Tu reporte ha sido publicado correctamente en el mapa nacional de respuesta humanitaria.
       </p>
-      
-      <div class="bg-venezuela-bg border border-venezuela-border rounded p-3 mb-6 text-xs select-all text-center">
-        <span class="text-venezuela-muted uppercase font-bold block mb-1">ID Único de Solicitud</span>
-        <code id="solicitud-id" class="text-venezuela-secondary font-mono font-bold block text-sm">cargando...</code>
+
+      <!-- ID de Solicitud -->
+      <div class="bg-[#0D0D0D] border border-[#2A2A2A] p-3 rounded-lg text-xs font-mono text-[#F5C400] select-all mb-6">
+        ID: <span id="span-id-solicitud">--------------------</span>
       </div>
-      
-      <a href="dashboard.html" class="w-full py-3 bg-venezuela-secondary hover:bg-yellow-500 text-venezuela-bg font-bold rounded-lg transition-colors flex items-center justify-center gap-2">
-        Ver en el dashboard
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-        </svg>
-      </a>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="dashboard.html" class="btn-emergency-warning flex-1 py-3 text-sm font-bold flex items-center justify-center">
+          Ir al Panel Público
+        </a>
+        <button type="button" onclick="cerrarYReiniciar()" class="btn-emergency-secondary flex-1 py-3 text-sm font-bold flex items-center justify-center">
+          Registrar Otro
+        </button>
+      </div>
+
     </div>
   </div>
 
   <!-- Footer -->
-  <footer class="border-t border-venezuela-border py-6 px-6 text-center text-xs text-venezuela-muted mt-auto">
-    <p>AyudaVenezuela &copy; 2026 | Aplicación de respuesta humanitaria de emergencia ante sismos</p>
+  <footer class="border-t border-[#2A2A2A] bg-[#0D0D0D] px-4 py-6 text-center">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="text-xs text-[#9CA3AF]">
+        &copy; 2026 Ecosistema <strong>AyudaVenezuela</strong>. Iniciativa humanitaria sin fines de lucro.
+      </div>
+    </div>
   </footer>
 
-  <!-- Lógica de Datos y Mapas -->
+  <!-- Scripts: CDNs, Config, DB, Map, Form Logic -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="config.js"></script>
   <script src="supabase.js"></script>
   <script src="mapa.js"></script>
-  
+  <script src="app.js"></script>
+
   <script>
-    // Parámetros e Inicialización
-    const params = new URLSearchParams(window.location.search);
-    const tipo = params.get('tipo') || 'individuo'; // 'centro_acopio' o 'individuo'
-    
-    let itemsSeleccionados = [];
-    let fotoBlobParaSubir = null;
-    let gravedadSeleccionada = '';
+    // Variables de estado del formulario
+    let itemsInsumos = [];
+    let fotoComprimidaBlob = null;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // 1. Configurar interfaz según tipo
-      const badgeEl = document.getElementById('header-badge');
-      const titleEl = document.getElementById('form-title');
-      const motivoEl = document.getElementById('motivo');
-      const itemsSec = document.getElementById('seccion-items');
+    // Inicializaciones al cargar la página
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Inicializar cliente Supabase
+      initSupabase();
 
-      if (tipo === 'centro_acopio') {
-        badgeEl.textContent = 'Centro de Acopio';
-        badgeEl.className = 'text-xs px-2.5 py-1 rounded font-bold uppercase border border-blue-800 text-blue-400 bg-blue-950/20';
-        titleEl.textContent = 'Registrar Centro de Acopio';
-        motivoEl.placeholder = 'Detalla los insumos que necesita tu centro, el horario de atención, y si tienen problemas de accesibilidad...';
-        itemsSec.classList.remove('hidden');
-      } else {
-        badgeEl.textContent = 'Individuo / SOS';
-        badgeEl.className = 'text-xs px-2.5 py-1 rounded font-bold uppercase border border-red-800 text-red-400 bg-red-950/20';
-        titleEl.textContent = 'Solicitar Ayuda Urgente (SOS)';
-        motivoEl.placeholder = 'Describe la situación de emergencia en la que te encuentras y qué insumos o ayuda médica necesitas urgentemente...';
+      // 2. Inicializar Mapa interactivo
+      iniciarMapaSolicitud('mapa-registro');
+
+      // 3. Manejo de roles / tipo de solicitante desde URL query param
+      const urlParams = new URLSearchParams(window.location.search);
+      const tipoQuery = urlParams.get('tipo');
+      const tipoSelect = document.getElementById('input-tipo');
+      
+      if (tipoQuery === 'centro_acopio' || tipoQuery === 'individuo') {
+        tipoSelect.value = tipoQuery;
       }
+      toggleSeccionItems(tipoSelect.value);
 
-      // 2. Inicializar Mapa Leaflet (desde mapa.js)
-      if (typeof window.iniciarMapaSolicitud === 'function') {
-        window.iniciarMapaSolicitud('mapa-solicitud');
-      }
+      // Listener de cambio de selector de tipo
+      tipoSelect.addEventListener('change', (e) => {
+        toggleSeccionItems(e.target.value);
+      });
+
+      // 4. Gestión de items de insumos
+      const inputNuevoItem = document.getElementById('input-nuevo-item');
+      const btnAgregarItem = document.getElementById('btn-agregar-item');
+      
+      btnAgregarItem.addEventListener('click', () => {
+        const itemText = inputNuevoItem.value.trim();
+        if (itemText) {
+          agregarInsumo(itemText);
+          inputNuevoItem.value = '';
+          inputNuevoItem.focus();
+        }
+      });
+
+      // Agregar con Enter en el input de items
+      inputNuevoItem.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          btnAgregarItem.click();
+        }
+      });
+
+      // 5. Manejo de adjuntos de foto y compresión
+      const inputFoto = document.getElementById('input-foto');
+      const containerPreview = document.getElementById('container-preview-foto');
+      const previewFoto = document.getElementById('preview-foto');
+      const btnEliminarFoto = document.getElementById('btn-eliminar-foto');
+
+      inputFoto.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Mostrar preview local inicial
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          previewFoto.src = event.target.result;
+          containerPreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+
+        // Realizar la compresión local a través del canvas
+        try {
+          fotoComprimidaBlob = await compressImageInCanvas(file);
+          console.log(`Foto comprimida exitosamente. Tamaño original: ${(file.size / 1024).toFixed(1)}KB, Comprimido: ${(fotoComprimidaBlob.size / 1024).toFixed(1)}KB`);
+        } catch (err) {
+          console.error("Error comprimiendo imagen:", err);
+          // Si falla, intentamos usar el archivo original si no excede limites
+          if (file.size <= 524288) {
+            fotoComprimidaBlob = file;
+          } else {
+            alert("No se pudo comprimir la foto y excede el límite permitido de 500 KB.");
+            inputFoto.value = '';
+            containerPreview.classList.add('hidden');
+            fotoComprimidaBlob = null;
+          }
+        }
+      });
+
+      btnEliminarFoto.addEventListener('click', () => {
+        inputFoto.value = '';
+        containerPreview.classList.add('hidden');
+        previewFoto.src = '';
+        fotoComprimidaBlob = null;
+      });
+
+      // 6. Validación de inputs individuales en tiempo real
+      const inputCedula = document.getElementById('input-cedula');
+      inputCedula.addEventListener('input', () => {
+        const regexCedula = /^[0-9]+$/;
+        const val = inputCedula.value;
+        const errSpan = document.getElementById('error-cedula');
+        if (val && (!regexCedula.test(val) || val.length < 6)) {
+          errSpan.classList.remove('hidden');
+        } else {
+          errSpan.classList.add('hidden');
+        }
+      });
+
+      const inputMotivo = document.getElementById('input-motivo');
+      inputMotivo.addEventListener('input', () => {
+        const errSpan = document.getElementById('error-motivo');
+        if (inputMotivo.value.length > 0 && inputMotivo.value.length < 20) {
+          errSpan.classList.remove('hidden');
+        } else {
+          errSpan.classList.add('hidden');
+        }
+      });
+
+      // 7. Evento Submit
+      const form = document.getElementById('form-solicitud');
+      form.addEventListener('submit', enviarSolicitudFormulario);
     });
 
-    // Cambiar la gravedad seleccionada
+    /**
+     * Muestra u oculta la sección de insumos según tipo de solicitante
+     */
+    function toggleSeccionItems(tipo) {
+      const seccion = document.getElementById('seccion-items');
+      const errSpan = document.getElementById('error-items');
+      if (tipo === 'centro_acopio') {
+        seccion.classList.remove('hidden');
+      } else {
+        seccion.classList.add('hidden');
+        errSpan.classList.add('hidden'); // Ocultar error si se cambia
+      }
+    }
+
+    /**
+     * Gestión del color seleccionado para la gravedad
+     */
     function seleccionarGravedad(gravedad) {
-      gravedadSeleccionada = gravedad;
-      document.getElementById('gravedad').value = gravedad;
+      document.getElementById('input-gravedad').value = gravedad;
       
-      // Limpiar clases activas
-      const btnLeve = document.getElementById('btn-grav-leve');
-      const btnMod = document.getElementById('btn-grav-moderado');
-      const btnGrave = document.getElementById('btn-grav-grave');
-      
-      btnLeve.className = 'btn-severity py-3.5 px-4 rounded-lg font-bold text-sm text-venezuela-muted text-center cursor-pointer min-h-[48px] flex items-center justify-center';
-      btnMod.className = 'btn-severity py-3.5 px-4 rounded-lg font-bold text-sm text-venezuela-muted text-center cursor-pointer min-h-[48px] flex items-center justify-center';
-      btnGrave.className = 'btn-severity py-3.5 px-4 rounded-lg font-bold text-sm text-venezuela-muted text-center cursor-pointer min-h-[48px] flex items-center justify-center';
-      
-      // Aplicar estilo según selección
-      if (gravedad === 'grave') {
-        btnGrave.classList.add('btn-severity-active-grave');
-      } else if (gravedad === 'moderado') {
-        btnMod.classList.add('btn-severity-active-moderado');
-      } else if (gravedad === 'leve') {
-        btnLeve.classList.add('btn-severity-active-leve');
-      }
-      
-      // Ocultar mensaje de error
-      document.getElementById('error-gravedad').classList.add('hidden');
-    }
+      const btnLeve = document.getElementById('btn-gravedad-leve');
+      const btnMod = document.getElementById('btn-gravedad-moderado');
+      const btnGrave = document.getElementById('btn-gravedad-grave');
 
-    // Agregar ítem de insumo a la lista
-    function agregarItem() {
-      const input = document.getElementById('input-item');
-      const valor = input.value.trim();
-      
-      if (valor === '') return;
-      if (itemsSeleccionados.includes(valor)) {
-        input.value = '';
-        return;
-      }
-
-      itemsSeleccionados.push(valor);
-      input.value = '';
-      document.getElementById('error-items').classList.add('hidden');
-      
-      renderChips();
-    }
-
-    // Eliminar ítem de la lista
-    function eliminarItem(index) {
-      itemsSeleccionados.splice(index, 1);
-      renderChips();
-    }
-
-    // Dibujar chips en el contenedor
-    function renderChips() {
-      const container = document.getElementById('items-container');
-      container.innerHTML = '';
-      
-      itemsSeleccionados.forEach((item, index) => {
-        const chip = document.createElement('span');
-        chip.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-venezuela-card border border-venezuela-border text-white text-xs font-medium';
-        chip.innerHTML = `
-          ${item}
-          <button type="button" onclick="eliminarItem(${index})" class="text-venezuela-muted hover:text-venezuela-primary text-sm font-bold ml-1">×</button>
-        `;
-        container.appendChild(chip);
+      // Resetear clases
+      [btnLeve, btnMod, btnGrave].forEach(btn => {
+        btn.classList.remove('border-2', 'border-[#22C55E]', 'border-[#F59E0B]', 'border-[#EF4444]', 'bg-[#22C55E]/10', 'bg-[#F59E0B]/10', 'bg-[#EF4444]/10');
+        btn.classList.add('border-[#2A2A2A]', 'bg-[#1A1A1A]');
       });
-    }
 
-    // Vista previa de imagen seleccionada con compresión
-    async function previewFoto(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const previewContainer = document.getElementById('foto-preview-container');
-      const previewImg = document.getElementById('foto-preview');
-      const infoEl = document.getElementById('foto-info');
-
-      // Mostrar preview inicial
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        previewImg.src = e.target.result;
-        previewContainer.classList.remove('hidden');
-      };
-      reader.readAsDataURL(file);
-
-      // Comprimir imagen usando Canvas API
-      infoEl.textContent = 'Comprimiendo imagen...';
-      try {
-        fotoBlobParaSubir = await comprimirImagenEnCliente(file);
-        const pesoKBOptimizado = Math.round(fotoBlobParaSubir.size / 1024);
-        infoEl.textContent = `Foto optimizada: ${pesoKBOptimizado} KB`;
-        infoEl.className = 'text-xs text-emerald-400 italic';
-      } catch (err) {
-        console.error('Error al comprimir:', err);
-        fotoBlobParaSubir = file; // Fallback
-        infoEl.textContent = 'No se pudo optimizar la foto. Se subirá en calidad original.';
-        infoEl.className = 'text-xs text-yellow-500 italic';
+      // Aplicar estilo activo al seleccionado
+      if (gravedad === 'leve') {
+        btnLeve.classList.remove('border-[#2A2A2A]', 'bg-[#1A1A1A]');
+        btnLeve.classList.add('border-2', 'border-[#22C55E]', 'bg-[#22C55E]/10');
+      } else if (gravedad === 'moderado') {
+        btnMod.classList.remove('border-[#2A2A2A]', 'bg-[#1A1A1A]');
+        btnMod.classList.add('border-2', 'border-[#F59E0B]', 'bg-[#F59E0B]/10');
+      } else if (gravedad === 'grave') {
+        btnGrave.classList.remove('border-[#2A2A2A]', 'bg-[#1A1A1A]');
+        btnGrave.classList.add('border-2', 'border-[#EF4444]', 'bg-[#EF4444]/10');
       }
     }
 
-    // Eliminar foto adjunta
-    function eliminarFoto() {
-      document.getElementById('foto-input').value = '';
-      document.getElementById('foto-preview-container').classList.add('hidden');
-      document.getElementById('foto-preview').src = '#';
-      document.getElementById('foto-info').textContent = 'La foto se comprimirá automáticamente';
-      document.getElementById('foto-info').className = 'text-xs text-venezuela-muted italic';
-      fotoBlobParaSubir = null;
+    /**
+     * Agrega un ítem a la lista de insumos
+     */
+    function agregarInsumo(text) {
+      if (itemsInsumos.includes(text)) return;
+      itemsInsumos.push(text);
+      
+      const ul = document.getElementById('lista-items-agregados');
+      const li = document.createElement('li');
+      li.className = "flex items-center justify-between bg-[#0D0D0D] border border-[#2A2A2A] px-3.5 py-2 rounded-lg text-sm";
+      li.innerHTML = `
+        <span class="text-white font-medium">${text}</span>
+        <button type="button" class="text-[#EF4444] hover:text-red-700 p-1 flex items-center justify-center transition-emergency" aria-label="Eliminar ${text}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+        </button>
+      `;
+      
+      li.querySelector('button').onclick = () => {
+        itemsInsumos = itemsInsumos.filter(i => i !== text);
+        li.remove();
+        validarItemsRequeridos();
+      };
+
+      ul.appendChild(li);
+      validarItemsRequeridos();
     }
 
-    // Algoritmo de Compresión con Canvas API
-    function comprimirImagenEnCliente(file) {
+    function validarItemsRequeridos() {
+      const tipo = document.getElementById('input-tipo').value;
+      const errSpan = document.getElementById('error-items');
+      if (tipo === 'centro_acopio' && itemsInsumos.length === 0) {
+        errSpan.classList.remove('hidden');
+        return false;
+      }
+      errSpan.classList.add('hidden');
+      return true;
+    }
+
+    /**
+     * Comprime localmente una imagen usando un Canvas de HTML5
+     */
+    async function compressImageInCanvas(file, maxWidth = 900, maxHeight = 900, quality = 0.75) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -415,172 +486,183 @@
           img.src = event.target.result;
           img.onload = () => {
             const canvas = document.createElement('canvas');
-            const maxDimension = 1000;
             let width = img.width;
             let height = img.height;
 
+            // Mantener la relación de aspecto
             if (width > height) {
-              if (width > maxDimension) {
-                height = Math.round((height * maxDimension) / width);
-                width = maxDimension;
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
               }
             } else {
-              if (height > maxDimension) {
-                width = Math.round((width * maxDimension) / height);
-                height = maxDimension;
+              if (height > maxHeight) {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
               }
             }
 
             canvas.width = width;
             canvas.height = height;
+
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
 
+            // Convertir canvas a Blob en formato JPEG
             canvas.toBlob((blob) => {
-              if (blob) resolve(blob);
-              else reject(new Error('Compresión vacía'));
-            }, 'image/jpeg', 0.82); // 82% calidad
+              if (!blob) {
+                reject(new Error("Image blob creation failed"));
+                return;
+              }
+              // Si aún supera los 500 KB (512,000 bytes) volvemos a comprimir recursivamente bajando calidad
+              if (blob.size > 512000 && quality > 0.3) {
+                resolve(compressImageInCanvas(file, maxWidth - 100, maxHeight - 100, quality - 0.15));
+              } else {
+                resolve(blob);
+              }
+            }, 'image/jpeg', quality);
           };
+          img.onerror = (e) => reject(e);
         };
         reader.onerror = (e) => reject(e);
       });
     }
 
-    // Acción al presionar Submit
-    async function enviarFormulario(event) {
-      event.preventDefault();
+    /**
+     * Envia los datos de la solicitud
+     */
+    async function enviarSolicitudFormulario(e) {
+      e.preventDefault();
       
-      const btnSubmit = document.getElementById('btn-submit');
-      const errGeneral = document.getElementById('error-general');
+      const tipo = document.getElementById('input-tipo').value;
+      const nombre = document.getElementById('input-nombre').value.trim();
+      const apellido = document.getElementById('input-apellido').value.trim();
+      const cedula = document.getElementById('input-cedula').value.trim();
+      const motivo = document.getElementById('input-motivo').value.trim();
+      const gravedad = document.getElementById('input-gravedad').value;
+      const direccion = document.getElementById('input-direccion-referencia').value.trim();
       
-      // Limpiar errores anteriores
-      errGeneral.classList.add('hidden');
-      document.querySelectorAll('[id^="error-"]').forEach(el => el.classList.add('hidden'));
+      const coords = getCoordenadasSeleccionadas();
+      const errorMap = document.getElementById('error-mapa');
+      const errCedula = document.getElementById('error-cedula');
+      const errMotivo = document.getElementById('error-motivo');
 
-      // 1. Obtener valores
-      const nombre = document.getElementById('nombre').value.trim();
-      const apellido = document.getElementById('apellido').value.trim();
-      const cedula = document.getElementById('cedula').value.trim();
-      const motivo = document.getElementById('motivo').value.trim();
-      const dirReferencia = document.getElementById('direccion_referencia').value.trim();
-      
-      // Coordenadas del mapa expuestas
-      let coordenadas = null;
-      if (typeof window.getCoordenadasSeleccionadas === 'function') {
-        coordenadas = window.getCoordenadasSeleccionadas();
+      // Validaciones
+      let valid = true;
+
+      // Cédula: numérica y mín 6 caracteres
+      if (!/^[0-9]+$/.test(cedula) || cedula.length < 6) {
+        errCedula.classList.remove('hidden');
+        valid = false;
+      } else {
+        errCedula.classList.add('hidden');
       }
 
-      // 2. Validaciones
-      let formValido = true;
-
-      if (nombre === '') {
-        mostrarError('nombre', 'El nombre es obligatorio.');
-        formValido = false;
-      }
-      if (apellido === '') {
-        mostrarError('apellido', 'El apellido es obligatorio.');
-        formValido = false;
-      }
-      if (cedula === '' || !/^[0-9]{6,10}$/.test(cedula)) {
-        mostrarError('cedula', 'La cédula debe contener solo números (entre 6 y 10 dígitos).');
-        formValido = false;
-      }
+      // Motivo: mín 20 caracteres
       if (motivo.length < 20) {
-        mostrarError('motivo', 'Describe detalladamente la situación (mínimo 20 caracteres).');
-        formValido = false;
-      }
-      if (gravedadSeleccionada === '') {
-        mostrarError('gravedad', 'Selecciona el nivel de gravedad/SOS.');
-        formValido = false;
-      }
-      if (tipo === 'centro_acopio' && itemsSeleccionados.length === 0) {
-        mostrarError('items', 'Debes ingresar al menos 1 insumo requerido.');
-        formValido = false;
-      }
-      if (!coordenadas) {
-        mostrarError('coordenadas', 'Debes hacer clic en el mapa para marcar tu ubicación exacta.');
-        formValido = false;
+        errMotivo.classList.remove('hidden');
+        valid = false;
+      } else {
+        errMotivo.classList.add('hidden');
       }
 
-      if (!formValido) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Insumos si es centro de acopio
+      if (tipo === 'centro_acopio' && !validarItemsRequeridos()) {
+        valid = false;
+      }
+
+      // Coordenadas válidas en el mapa
+      if (!coords.lat || !coords.lng) {
+        errorMap.classList.remove('hidden');
+        valid = false;
+      } else {
+        errorMap.classList.add('hidden');
+      }
+
+      if (!valid) {
+        // Scroll hacia arriba para corregir
+        window.scrollTo({ top: 100, behavior: 'smooth' });
         return;
       }
 
-      // 3. Proceder al Envío
-      btnSubmit.innerHTML = `
-        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="width: 1.25rem; height: 1.25rem; animation: spin 1s linear infinite;">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" style="opacity: 0.75;"></path>
-        </svg>
-        Procesando y enviando solicitud...
-      `;
-      btnSubmit.disabled = true;
+      // Bloquear UI para envío
+      const btnEnviar = document.getElementById('btn-enviar-formulario');
+      const textoEnviar = document.getElementById('texto-enviar');
+      btnEnviar.disabled = true;
+      btnEnviar.classList.add('opacity-50', 'cursor-not-allowed');
+      textoEnviar.innerText = "Procesando...";
 
       try {
-        let fotoUrlPublica = null;
+        let uploadedFotoUrl = null;
 
-        // Subir foto si existe
-        if (fotoBlobParaSubir) {
-          const extension = fotoBlobParaSubir.type === 'image/png' ? 'png' : 'jpg';
-          const nombreArchivo = `${Date.now()}_foto.${extension}`;
-          
-          if (typeof window.subirFoto === 'function') {
-            const uploadRes = await window.subirFoto(fotoBlobParaSubir, nombreArchivo);
-            if (uploadRes.success) {
-              fotoUrlPublica = uploadRes.url;
-            } else {
-              throw new Error(`Error en subida de foto: ${uploadRes.error}`);
-            }
-          }
+        // Subir foto comprimida si se adjuntó
+        if (fotoComprimidaBlob) {
+          uploadedFotoUrl = await subirFoto(fotoComprimidaBlob);
         }
 
-        // Crear la solicitud en Base de Datos
-        if (typeof window.crearSolicitud === 'function') {
-          const payload = {
-            tipo: tipo,
-            nombre: nombre,
-            apellido: apellido,
-            cedula: cedula,
-            motivo: motivo,
-            gravedad: gravedadSeleccionada,
-            items: itemsSeleccionados,
-            foto_url: fotoUrlPublica,
-            latitud: coordenadas.lat,
-            longitud: coordenadas.lng,
-            direccion_referencia: dirReferencia || coordenadas.direccion
-          };
+        // Crear la solicitud en DB
+        const payload = {
+          tipo: tipo,
+          nombre: nombre,
+          apellido: apellido,
+          cedula: cedula,
+          motivo: motivo,
+          gravedad: gravedad,
+          items: tipo === 'centro_acopio' ? itemsInsumos : [],
+          foto_url: uploadedFotoUrl,
+          latitud: coords.lat,
+          longitud: coords.lng,
+          direccion_referencia: direccion
+        };
 
-          const insertRes = await window.crearSolicitud(payload);
-          if (insertRes.success) {
-            // Mostrar modal de éxito
-            document.getElementById('solicitud-id').textContent = insertRes.id;
-            document.getElementById('modal-exito').classList.remove('hidden');
-          } else {
-            throw new Error(insertRes.error || 'Error al persistir en base de datos.');
-          }
-        } else {
-          throw new Error('El SDK de Supabase o cliente no está disponible.');
-        }
+        const res = await crearSolicitud(payload);
+        
+        // Mostrar Modal Confirmación
+        document.getElementById('span-id-solicitud').innerText = res.id;
+        document.getElementById('modal-confirmacion').classList.remove('hidden');
 
       } catch (err) {
-        console.error('Error al guardar solicitud:', err);
-        errGeneral.textContent = `No se pudo enviar la solicitud: ${err.message || 'Error de conexión'}. Verifica tu conexión a internet e inténtalo de nuevo.`;
-        errGeneral.classList.remove('hidden');
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-      } finally {
-        btnSubmit.innerHTML = 'Enviar solicitud de ayuda';
-        btnSubmit.disabled = false;
+        console.error("Error al enviar formulario de solicitud:", err);
+        alert("Ocurrió un error al enviar tu solicitud. Por favor, revisa tu conexión e inténtalo de nuevo.");
+        
+        btnEnviar.disabled = false;
+        btnEnviar.classList.remove('opacity-50', 'cursor-not-allowed');
+        textoEnviar.innerText = "Publicar Solicitud";
       }
     }
 
-    // Auxiliar para mostrar errores
-    function mostrarError(campo, mensaje) {
-      const el = document.getElementById(`error-${campo}`);
-      if (el) {
-        el.textContent = mensaje;
-        el.classList.remove('hidden');
-      }
+    /**
+     * Reiniciar todo el formulario para una nueva entrada
+     */
+    function cerrarYReiniciar() {
+      // Ocultar modal
+      document.getElementById('modal-confirmacion').classList.add('hidden');
+      
+      // Reset formulario
+      document.getElementById('form-solicitud').reset();
+      
+      // Reset variables de insumos
+      itemsInsumos = [];
+      document.getElementById('lista-items-agregados').innerHTML = '';
+      
+      // Reset foto
+      document.getElementById('input-foto').value = '';
+      document.getElementById('container-preview-foto').classList.add('hidden');
+      document.getElementById('preview-foto').src = '';
+      fotoComprimidaBlob = null;
+      
+      // Reset gravedad a moderado
+      seleccionarGravedad('moderado');
+
+      // Reset estado del botón de envío
+      const btnEnviar = document.getElementById('btn-enviar-formulario');
+      const textoEnviar = document.getElementById('texto-enviar');
+      btnEnviar.disabled = false;
+      btnEnviar.classList.remove('opacity-50', 'cursor-not-allowed');
+      textoEnviar.innerText = "Publicar Solicitud";
+
+      // Reset mapa
+      iniciarMapaSolicitud('mapa-registro');
     }
   </script>
 </body>

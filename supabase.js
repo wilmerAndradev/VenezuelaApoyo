@@ -1,331 +1,178 @@
+// supabase.js - Cliente y funciones de base de datos para AcopioVE
+
+let supabaseClient = null;
+
 /**
- * supabase.js - Módulo de Integración con Supabase para AcopioVE
- * 
- * Este archivo actúa como el punto único de contacto entre el frontend
- * y la base de datos/almacenamiento de Supabase.
- * Todas las funciones se exponen globalmente a través del objeto window.
+ * Inicializa el cliente de Supabase usando la configuración global.
+ * Debe llamarse después de cargar config.js y la CDN de Supabase.
  */
+function initSupabase() {
+  if (typeof SUPABASE_CONFIG === 'undefined') {
+    console.error("Error: SUPABASE_CONFIG no está definido. Asegúrate de que config.js esté cargado.");
+    return null;
+  }
+  if (typeof supabase === 'undefined') {
+    console.error("Error: La librería de Supabase no está cargada desde CDN.");
+    return null;
+  }
+  
+  if (!supabaseClient) {
+    supabaseClient = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key);
+  }
+  return supabaseClient;
+}
 
-(function() {
-  // Instancia privada del cliente Supabase
-  let supabaseClient = null;
+/**
+ * Obtiene el cliente inicializado, garantizando que esté listo.
+ */
+function getSupabaseClient() {
+  if (!supabaseClient) {
+    initSupabase();
+  }
+  return supabaseClient;
+}
 
-  /**
-   * 1. Inicializa el cliente de Supabase.
-   * Lee credenciales globales de window.SUPABASE_CONFIG.
-   * 
-   * @returns {Object|null} El cliente Supabase inicializado o null en caso de error.
-   */
-  window.inicializarSupabase = function() {
-    if (supabaseClient) {
-      return supabaseClient;
-    }
+/**
+ * Registra una nueva solicitud de insumos en la base de datos.
+ * @param {Object} datos - Objeto con los datos del formulario.
+ * @returns {Promise<Object>} Resultado de la inserción.
+ */
+async function crearSolicitud(datos) {
+  const client = getSupabaseClient();
+  if (!client) throw new Error("Supabase no inicializado");
 
-    // Validar existencia de configuración global
-    if (typeof window.SUPABASE_CONFIG === 'undefined') {
-      console.error('Error: SUPABASE_CONFIG no está definido. Asegúrate de incluir config.js antes de supabase.js.');
-      return null;
-    }
-
-    const { url, key } = window.SUPABASE_CONFIG;
-    if (!url || !key || url.includes('AQUI') || key.includes('AQUI')) {
-      console.error('Error: Las credenciales de Supabase en config.js no son válidas o están vacías.');
-      return null;
-    }
-
-    try {
-      // Verificar que la librería de Supabase del CDN esté cargada
-      if (typeof window.supabase === 'undefined') {
-        console.error('Error: El SDK global de Supabase no está cargado. Asegúrate de incluir la etiqueta script del CDN en el HTML.');
-        return null;
-      }
-
-      // Crear e instanciar el cliente
-      supabaseClient = window.supabase.createClient(url, key);
-      window._supabase = supabaseClient;
-      
-      console.log('Supabase inicializado correctamente.');
-      return supabaseClient;
-    } catch (error) {
-      console.error('Error al instanciar el cliente de Supabase:', error);
-      return null;
-    }
+  // Sanitización y formateo básico de datos
+  const payload = {
+    tipo: datos.tipo, // 'centro_acopio' | 'individuo'
+    nombre: datos.nombre.trim(),
+    apellido: datos.apellido.trim(),
+    cedula: datos.cedula.trim(),
+    motivo: datos.motivo.trim(),
+    gravedad: datos.gravedad, // 'leve' | 'moderado' | 'grave'
+    items: datos.items || [], // array de strings
+    foto_url: datos.foto_url || null,
+    latitud: parseFloat(datos.latitud),
+    longitud: parseFloat(datos.longitud),
+    direccion_referencia: datos.direccion_referencia ? datos.direccion_referencia.trim() : '',
+    activo: true
   };
 
-  /**
-   * Obtiene la instancia activa del cliente Supabase, inicializándolo si es necesario.
-   * 
-   * @returns {Object} El cliente Supabase.
-   * @throws {Error} Si Supabase no ha sido inicializado.
-   */
-  function obtenerCliente() {
-    const client = window.inicializarSupabase();
-    if (!client) {
-      throw new Error('Supabase no está inicializado. Verifica las credenciales en config.js.');
-    }
-    return client;
+  const { data, error } = await client
+    .from('solicitudes')
+    .insert([payload])
+    .select();
+
+  if (error) {
+    console.error("Error al crear solicitud:", error);
+    throw error;
   }
 
-  /**
-   * 2. Crea una nueva solicitud de ayuda en la base de datos.
-   * 
-   * @param {Object} datos - Objeto con los datos de la solicitud.
-   * @returns {Promise<Object>} Promesa que resuelve a { success: true, id } o { success: false, error }.
-   */
-  window.crearSolicitud = async function(datos) {
-    try {
-      const client = obtenerCliente();
+  return data[0];
+}
 
-      // Validaciones básicas de tipo de datos en el cliente para ahorrar ancho de banda
-      if (!datos.tipo || (datos.tipo !== 'centro_acopio' && datos.tipo !== 'individuo')) {
-        return { success: false, error: 'El campo tipo es obligatorio y debe ser "centro_acopio" o "individuo".' };
-      }
-      if (!datos.nombre || datos.nombre.trim() === '') {
-        return { success: false, error: 'El nombre es requerido.' };
-      }
-      if (!datos.apellido || datos.apellido.trim() === '') {
-        return { success: false, error: 'El apellido es requerido.' };
-      }
-      if (!datos.cedula || !/^[0-9]{6,10}$/.test(datos.cedula)) {
-        return { success: false, error: 'La cédula debe contener únicamente números y tener entre 6 y 10 dígitos.' };
-      }
-      if (!datos.motivo || datos.motivo.trim() === '') {
-        return { success: false, error: 'El motivo es requerido.' };
-      }
-      if (!datos.gravedad || (datos.gravedad !== 'leve' && datos.gravedad !== 'moderado' && datos.gravedad !== 'grave')) {
-        return { success: false, error: 'La gravedad debe ser "leve", "moderado" o "grave".' };
-      }
+/**
+ * Obtiene la lista de solicitudes activas aplicando filtros opcionales.
+ * @param {Object} filtros - Filtros opcionales { tipo, gravedad }
+ * @returns {Promise<Array>} Lista de solicitudes.
+ */
+async function obtenerSolicitudes(filtros = {}) {
+  const client = getSupabaseClient();
+  if (!client) throw new Error("Supabase no inicializado");
 
-      // Preparar payload de inserción sanitizado
-      const payload = {
-        tipo: datos.tipo,
-        nombre: datos.nombre.trim(),
-        apellido: datos.apellido.trim(),
-        cedula: datos.cedula.trim(),
-        motivo: datos.motivo.trim(),
-        gravedad: datos.gravedad,
-        items: Array.isArray(datos.items) ? datos.items : [],
-        foto_url: datos.foto_url ? datos.foto_url.trim() : null,
-        latitud: datos.latitud ? parseFloat(datos.latitud) : null,
-        longitud: datos.longitud ? parseFloat(datos.longitud) : null,
-        direccion_referencia: datos.direccion_referencia ? datos.direccion_referencia.trim() : null,
-        activo: true
-      };
+  let query = client
+    .from('solicitudes')
+    .select('*')
+    .eq('activo', true)
+    .order('created_at', { ascending: false });
 
-      const { data, error } = await client
-        .from('solicitudes')
-        .insert([payload])
-        .select('id');
+  if (filtros.tipo && filtros.tipo !== 'todos') {
+    query = query.eq('tipo', filtros.tipo);
+  }
 
-      if (error) {
-        throw error;
-      }
+  if (filtros.gravedad && filtros.gravedad !== 'todos') {
+    query = query.eq('gravedad', filtros.gravedad);
+  }
 
-      if (!data || data.length === 0) {
-        throw new Error('No se recibió confirmación de ID de la fila insertada.');
-      }
+  const { data, error } = await query;
 
-      return { success: true, id: data[0].id };
-    } catch (error) {
-      console.error('Error en crearSolicitud:', error);
-      return { success: false, error: error.message || 'Error desconocido al guardar la solicitud.' };
-    }
+  if (error) {
+    console.error("Error al obtener solicitudes:", error);
+    throw error;
+  }
+
+  return data;
+}
+
+/**
+ * Obtiene estadísticas generales de las solicitudes activas.
+ * @returns {Promise<Object>} Estadísticas { total, centro_acopio, individuo, grave, moderado, leve }
+ */
+async function obtenerEstadisticas() {
+  const client = getSupabaseClient();
+  if (!client) throw new Error("Supabase no inicializado");
+
+  // Hacemos una consulta ligera trayendo solo tipo y gravedad de las activas para procesar localmente
+  const { data, error } = await client
+    .from('solicitudes')
+    .select('tipo, gravedad')
+    .eq('activo', true);
+
+  if (error) {
+    console.error("Error al obtener estadísticas:", error);
+    throw error;
+  }
+
+  const stats = {
+    total: data.length,
+    centro_acopio: 0,
+    individuo: 0,
+    grave: 0,
+    moderado: 0,
+    leve: 0
   };
 
-  /**
-   * 3. Obtiene una lista de solicitudes con filtros opcionales.
-   * 
-   * @param {Object} filtros - Opciones de filtrado y ordenación.
-   * @param {string} [filtros.tipo] - Filtra por 'centro_acopio' o 'individuo'.
-   * @param {string} [filtros.gravedad] - Filtra por 'leve', 'moderado', 'grave'.
-   * @param {boolean} [filtros.activo=true] - Filtra por estado activo.
-   * @param {number} [filtros.limite=100] - Cantidad máxima de registros.
-   * @returns {Promise<Object>} Resuelve a { success: true, data } o { success: false, error }.
-   */
-  window.obtenerSolicitudes = async function(filtros = {}) {
-    try {
-      const client = obtenerCliente();
-
-      // Construcción base del query
-      let query = client.from('solicitudes').select('*');
-
-      // Filtro de activo (por defecto true)
-      const activo = (filtros.activo !== undefined) ? filtros.activo : true;
-      if (activo !== null) {
-        query = query.eq('activo', activo);
-      }
-
-      // Filtro de tipo
-      if (filtros.tipo && filtros.tipo !== 'todos') {
-        query = query.eq('tipo', filtros.tipo);
-      }
-
-      // Filtro de gravedad
-      if (filtros.gravedad && filtros.gravedad !== 'todos') {
-        query = query.eq('gravedad', filtros.gravedad);
-      }
-
-      // Ordenar por defecto de más reciente a más antiguo
-      query = query.order('created_at', { ascending: false });
-
-      // Limitar cantidad de filas (por defecto 100)
-      const limite = (filtros.limite !== undefined) ? filtros.limite : 100;
-      query = query.limit(limite);
-
-      const { data, error } = await query;
-
-      if (error) {
-        throw error;
-      }
-
-      return { success: true, data: data || [] };
-    } catch (error) {
-      console.error('Error en obtenerSolicitudes:', error);
-      return { success: false, error: error.message || 'Error al obtener las solicitudes de ayuda.' };
+  data.forEach(item => {
+    if (stats.hasOwnProperty(item.tipo)) {
+      stats[item.tipo]++;
     }
-  };
-
-  /**
-   * 4. Obtiene estadísticas dinámicas consolidadas de solicitudes activas.
-   * 
-   * @returns {Promise<Object>} Resuelve a { success: true, total, grave, moderado, leve, centros, individuos } o { success: false, error }.
-   */
-  window.obtenerEstadisticas = async function() {
-    try {
-      const client = obtenerCliente();
-
-      // Consultar únicamente campos clave de filas activas para optimizar ancho de banda
-      const { data, error } = await client
-        .from('solicitudes')
-        .select('tipo, gravedad')
-        .eq('activo', true);
-
-      if (error) {
-        throw error;
-      }
-
-      // Contadores
-      let grave = 0;
-      let moderado = 0;
-      let leve = 0;
-      let centros = 0;
-      let individuos = 0;
-
-      data.forEach(item => {
-        // Gravedad
-        if (item.gravedad === 'grave') grave++;
-        else if (item.gravedad === 'moderado') moderado++;
-        else if (item.gravedad === 'leve') leve++;
-
-        // Tipo de solicitante
-        if (item.tipo === 'centro_acopio') centros++;
-        else if (item.tipo === 'individuo') individuos++;
-      });
-
-      return {
-        success: true,
-        total: data.length,
-        grave,
-        moderado,
-        leve,
-        centros,
-        individuos
-      };
-    } catch (error) {
-      console.error('Error en obtenerEstadisticas:', error);
-      return { success: false, error: error.message || 'Error al calcular estadísticas.' };
+    if (stats.hasOwnProperty(item.gravedad)) {
+      stats[item.gravedad]++;
     }
-  };
-
-  /**
-   * 5. Sube una foto a Supabase Storage en el bucket 'fotos-solicitudes'.
-   * 
-   * @param {Blob|File} archivoBlob - El archivo o blob de la imagen a subir.
-   * @param {string} nombreArchivo - Nombre original del archivo.
-   * @returns {Promise<Object>} Resuelve a { success: true, url } o { success: false, error }.
-   */
-  window.subirFoto = async function(archivoBlob, nombreArchivo) {
-    try {
-      const client = obtenerCliente();
-
-      if (!archivoBlob) {
-        return { success: false, error: 'No se ha provisto ningún archivo.' };
-      }
-
-      // Generar nombre de archivo único libre de caracteres especiales
-      const timestamp = Date.now();
-      const nombreLimpio = nombreArchivo.replace(/[^a-zA-Z0-9.]/g, '_');
-      const nombreUnico = `${timestamp}_${nombreLimpio}`;
-
-      // Subir archivo al bucket
-      const { error } = await client.storage
-        .from('fotos-solicitudes')
-        .upload(nombreUnico, archivoBlob, {
-          contentType: archivoBlob.type || 'image/jpeg',
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (error) {
-        throw error;
-      }
-
-      // Generar y obtener URL pública
-      const { data: publicUrlData } = client.storage
-        .from('fotos-solicitudes')
-        .getPublicUrl(nombreUnico);
-
-      if (!publicUrlData || !publicUrlData.publicUrl) {
-        throw new Error('No se pudo generar la URL pública del archivo subido.');
-      }
-
-      return { success: true, url: publicUrlData.publicUrl };
-    } catch (error) {
-      console.error('Error en subirFoto:', error);
-      return { success: false, error: error.message || 'Error al subir la imagen al servidor.' };
-    }
-  };
-
-  /**
-   * 6. Se suscribe a inserciones de solicitudes en tiempo real vía Realtime.
-   * Llama a la función callback cada vez que se inserta una nueva solicitud activa.
-   * 
-   * @param {Function} callback - Función que recibe la nueva solicitud.
-   * @returns {Object} El canal de realtime activo, con el método .unsubscribe() envuelto.
-   */
-  window.suscribirCambios = function(callback) {
-    try {
-      const client = obtenerCliente();
-
-      if (typeof callback !== 'function') {
-        console.warn('Advertencia: El parámetro callback de suscribirCambios no es una función válida.');
-        return null;
-      }
-
-      const canal = client
-        .channel('solicitudes_realtime_insert')
-        .on(
-          'postgres_changes',
-          { event: 'INSERT', schema: 'public', table: 'solicitudes' },
-          (payload) => {
-            // Solo notificar si la solicitud entrante está activa
-            if (payload.new && payload.new.activo) {
-              callback(payload.new);
-            }
-          }
-        )
-        .subscribe();
-
-      // El objeto canal devuelto ya tiene incorporado el método .unsubscribe() nativo en Supabase v2
-      return canal;
-    } catch (error) {
-      console.error('Error en suscribirCambios:', error);
-      return null;
-    }
-  };
-
-  // Bloque de auto-inicialización al cargarse el DOM
-  document.addEventListener('DOMContentLoaded', () => {
-    window.inicializarSupabase();
   });
-})();
+
+  return stats;
+}
+
+/**
+ * Sube una foto comprimida al bucket 'fotos-solicitudes' y retorna su URL pública.
+ * @param {Blob|File} archivo - Archivo a subir.
+ * @returns {Promise<string>} URL pública de la imagen.
+ */
+async function subirFoto(archivo) {
+  const client = getSupabaseClient();
+  if (!client) throw new Error("Supabase no inicializado");
+
+  // Generar un nombre de archivo único
+  const fileExt = archivo.name ? archivo.name.split('.').pop() : 'jpg';
+  const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+  const filePath = fileName;
+
+  const { data, error } = await client.storage
+    .from('fotos-solicitudes')
+    .upload(filePath, archivo, {
+      contentType: archivo.type || 'image/jpeg',
+      cacheControl: '3600'
+    });
+
+  if (error) {
+    console.error("Error al subir foto:", error);
+    throw error;
+  }
+
+  // Obtener URL pública
+  const { data: publicUrlData } = client.storage
+    .from('fotos-solicitudes')
+    .getPublicUrl(filePath);
+
+  return publicUrlData.publicUrl;
+}

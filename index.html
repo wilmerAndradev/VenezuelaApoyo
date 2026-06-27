@@ -5,174 +5,176 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AcopioVE — Ecosistema AyudaVenezuela</title>
   
-  <!-- CDNs obligatorios del proyecto -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Plataforma de respuesta humanitaria ante el terremoto en Venezuela. Conectamos centros de acopio y personas afectadas con voluntarios y donantes.">
+  <meta name="theme-color" content="#0D0D0D">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   
-  <!-- Configuración de Tailwind para usar la paleta de colores del proyecto -->
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            venezuela: {
-              bg: '#0D0D0D',
-              card: '#1A1A1A',
-              border: '#2A2A2A',
-              text: '#F0F0F0',
-              muted: '#9CA3AF',
-              primary: '#CF142B',
-              secondary: '#F5C400'
-            }
-          },
           fontFamily: {
-            sans: ['Inter', 'sans-serif']
-          }
+            sans: ['Inter', 'sans-serif'],
+          },
         }
       }
     }
   </script>
-  
-  <!-- Estilos globales y específicos del proyecto -->
+
+  <!-- Estilos compartidos y de acopio -->
   <link rel="stylesheet" href="shared.css">
   <link rel="stylesheet" href="acopio.css">
   
-  <!-- SDK de Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    /* Clases adicionales para garantizar la paleta estricta en Tailwind */
+    body {
+      background-color: #0D0D0D !important;
+      color: #F0F0F0 !important;
+    }
+  </style>
 </head>
-<body class="bg-venezuela-bg text-venezuela-text flex flex-col min-h-screen">
+<body class="min-h-screen flex flex-col justify-between font-sans">
 
   <!-- Header -->
-  <header class="border-b border-venezuela-border py-4 px-6">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-      <div class="flex items-center gap-2">
-        <span class="text-venezuela-primary font-bold text-2xl tracking-wider uppercase">AyudaVenezuela</span>
-        <span class="text-xs px-2 py-0.5 rounded bg-venezuela-primary/10 text-venezuela-primary border border-venezuela-primary/30 font-bold">AcopioVE</span>
+  <header class="border-b border-[#2A2A2A] bg-[#0D0D0D]/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex flex-col">
+        <a href="index.html" class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+          <span class="text-[#CF142B]">Ayuda</span><span class="text-[#F5C400]">Venezuela</span>
+        </a>
+        <span class="text-[11px] text-[#9CA3AF] tracking-wider uppercase font-medium">Plataforma de respuesta humanitaria</span>
       </div>
-      <p class="text-venezuela-muted text-sm font-medium">Plataforma de respuesta humanitaria</p>
+      <a href="dashboard.html" class="text-xs bg-[#1A1A1A] border border-[#2A2A2A] text-white px-3 py-1.5 rounded-md hover:bg-[#222] transition-emergency min-h-[38px] flex items-center justify-center font-medium">
+        Ver Panel
+      </a>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <main class="flex-grow flex flex-col justify-center max-w-4xl mx-auto px-6 py-10 w-full">
-    <div class="text-center mb-12">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-venezuela-primary/10 border border-venezuela-primary/30 text-venezuela-primary font-bold text-xs uppercase mb-6 animate-pulse">
-        <span class="w-2.5 h-2.5 rounded-full bg-venezuela-primary"></span>
-        Emergencia Activa
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 py-8 flex-1 flex flex-col justify-center w-full">
+    
+    <!-- Hero Emergency Section -->
+    <section class="text-center mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#CF142B]/10 border border-[#CF142B]/30 text-[#EF4444] text-xs font-semibold mb-4 animate-pulse">
+        <span class="w-2 h-2 rounded-full bg-[#EF4444]"></span>
+        EMERGENCIA ACTIVA: RESPUESTA TERREMOTO
       </div>
-      <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-white leading-tight">
+      <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
         Venezuela necesita tu ayuda
       </h1>
-      <p class="text-lg md:text-xl text-venezuela-muted max-w-2xl mx-auto">
-        Conectamos centros de acopio con personas dispuestas a colaborar para canalizar insumos humanitarios de manera eficiente.
+      <p class="text-base md:text-lg text-[#9CA3AF] max-w-xl mx-auto leading-relaxed">
+        Conectamos de forma directa centros de acopio y personas afectadas con voluntarios y donantes dispuestos a colaborar.
       </p>
-    </div>
+    </section>
 
-    <!-- Cards de Selección de Rol -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+    <!-- Role Cards Selector -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
       
       <!-- CARD A: Centro de Acopio -->
-      <div onclick="window.location.href='solicitar.html?tipo=centro_acopio'" class="card-role flex flex-col justify-between p-8 bg-venezuela-card border-2 border-venezuela-border hover:border-venezuela-secondary transition-all duration-200 cursor-pointer rounded-xl group">
-        <div class="flex flex-col items-center text-center">
-          <div class="w-16 h-16 rounded-full bg-venezuela-secondary/10 flex items-center justify-center text-venezuela-secondary mb-6 group-hover:scale-110 transition-transform duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5V18a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18V7.5m18 0V5.25A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25V7.5m18 0-8.99 4.99L3 7.5m18 0-8.99-4.99L3 3" />
+      <div onclick="window.location.href='solicitar.html?tipo=centro_acopio'" class="card-role flex flex-col justify-between h-full hover:border-[#F5C400] focus-within:border-[#F5C400]" tabindex="0" aria-label="Registrar necesidades como Centro de Acopio">
+        <div class="flex flex-col items-center">
+          <div class="w-14 h-14 bg-[#F5C400]/10 border border-[#F5C400]/30 rounded-xl flex items-center justify-center text-[#F5C400] mb-5">
+            <!-- Icono Caja/Almacen SVG -->
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
             </svg>
           </div>
-          <h2 class="text-2xl font-bold text-white mb-3">Soy Centro de Acopio</h2>
-          <p class="text-venezuela-muted text-sm mb-6 leading-relaxed">
-            Registra tu centro de distribución oficial y publica el listado de insumos que necesitas recibir urgentemente.
+          <h2 class="text-xl font-bold text-white mb-2">Soy un Centro de Acopio</h2>
+          <p class="text-sm text-[#9CA3AF] mb-6 max-w-xs">
+            Registra tu instalación organizada y publica la lista de insumos que necesitas recibir de urgencia.
           </p>
         </div>
-        <a href="solicitar.html?tipo=centro_acopio" class="btn-emergency-warning w-full py-3.5 text-center mt-auto font-bold flex items-center justify-center gap-2">
+        <a href="solicitar.html?tipo=centro_acopio" class="btn-emergency-warning w-full mt-auto" tabindex="-1">
           Registrar necesidades
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-          </svg>
         </a>
       </div>
 
-      <!-- CARD B: Individuo / SOS -->
-      <div onclick="window.location.href='solicitar.html?tipo=individuo'" class="card-role flex flex-col justify-between p-8 bg-venezuela-card border-2 border-venezuela-border hover:border-venezuela-primary transition-all duration-200 cursor-pointer rounded-xl group">
-        <div class="flex flex-col items-center text-center">
-          <div class="w-16 h-16 rounded-full bg-venezuela-primary/10 flex items-center justify-center text-venezuela-primary mb-6 group-hover:scale-110 transition-transform duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10.05 4.575a1 1 0 0 1 .89.927l.006.083.001 2.222.062-.007a1 1 0 0 1 .932.74l.015.067.001 6.096a1 1 0 0 1-.787.973l-.088.016-3.13.518-.088-.016a1 1 0 0 1-.722-.722l-.015-.067V8.583a1 1 0 0 1 .803-.98l.088-.013 2.162-.236V5.502a1 1 0 0 1 .89-.927zM18 9a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3v-3a3 3 0 0 1 3-3h2z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.5a6 6 0 0 0-12 0" />
-              <circle cx="12" cy="7" r="4" />
+      <!-- CARD B: Necesito Ayuda Urgente -->
+      <div onclick="window.location.href='solicitar.html?tipo=individuo'" class="card-role flex flex-col justify-between h-full hover:border-[#CF142B] focus-within:border-[#CF142B]" tabindex="0" aria-label="Pedir ayuda urgente como individuo">
+        <div class="flex flex-col items-center">
+          <div class="w-14 h-14 bg-[#CF142B]/10 border border-[#CF142B]/30 rounded-xl flex items-center justify-center text-[#CF142B] mb-5">
+            <!-- Icono Persona/SOS SVG -->
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
             </svg>
           </div>
-          <h2 class="text-2xl font-bold text-white mb-3">Necesito Ayuda Urgente</h2>
-          <p class="text-venezuela-muted text-sm mb-6 leading-relaxed">
-            Reporta tu situación o la de tu comunidad si te encuentras en un estado de emergencia crítica o necesitas insumos específicos.
+          <h2 class="text-xl font-bold text-white mb-2">Necesito Ayuda Urgente</h2>
+          <p class="text-sm text-[#9CA3AF] mb-6 max-w-xs">
+            Reporta tu situación de emergencia personal, familiar o comunitaria para recibir asistencia.
           </p>
         </div>
-        <a href="solicitar.html?tipo=individuo" class="btn-emergency-primary w-full py-3.5 text-center mt-auto font-bold flex items-center justify-center gap-2">
+        <a href="solicitar.html?tipo=individuo" class="btn-emergency-primary w-full mt-auto" tabindex="-1">
           Pedir ayuda ahora
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-          </svg>
         </a>
       </div>
 
-    </div>
+    </section>
 
-    <!-- Botón Secundario Dashboard -->
-    <div class="text-center mb-8">
-      <a href="dashboard.html" class="btn-emergency-secondary px-8 py-3.5 rounded-lg border border-venezuela-border text-white hover:bg-venezuela-card transition-colors duration-200 font-medium inline-flex items-center gap-2">
-        Ver todas las solicitudes activas
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-venezuela-secondary">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-.977l-4.82 2.41a1.25 1.25 0 0 1-1.118 0L9.497 3.844a1.25 1.25 0 0 0-1.118 0L3.503 6.344a1.249 1.249 0 0 0-.622 1.006v10.156c0 .836.88 1.38 1.628.977l4.82-2.41a1.25 1.25 0 0 1 1.118 0l4.82 2.41a1.25 1.25 0 0 0 1.118 0z" />
+    <!-- Secondary Link -->
+    <div class="text-center">
+      <a href="dashboard.html" class="btn-emergency-secondary w-full md:w-auto inline-flex">
+        <!-- Icono Mapa -->
+        <svg class="w-5 h-5 text-[#F5C400]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
         </svg>
+        <span>Ver todas las solicitudes activas</span>
       </a>
     </div>
 
-    <!-- Counter Dinámico -->
-    <div class="text-center py-3 bg-venezuela-card/50 border border-venezuela-border/60 rounded-lg max-w-sm mx-auto">
-      <p id="total-counter" class="text-sm font-bold text-venezuela-muted flex items-center justify-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-ping"></span>
-        Cargando solicitudes activas...
-      </p>
-    </div>
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-venezuela-border py-6 px-6 text-center text-xs text-venezuela-muted mt-auto">
-    <p>AyudaVenezuela &copy; 2026 | Aplicación de respuesta humanitaria de emergencia ante sismos</p>
+  <footer class="border-t border-[#2A2A2A] bg-[#0D0D0D] px-4 py-6 text-center">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Contador de Solicitudes -->
+      <div id="stats-counter" class="text-sm text-[#9CA3AF] flex items-center gap-2 bg-[#1A1A1A] border border-[#2A2A2A] px-3.5 py-1.5 rounded-full font-medium">
+        <span class="flex h-2.5 w-2.5 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+        </span>
+        <span id="counter-text">Cargando solicitudes...</span>
+      </div>
+
+      <div class="text-xs text-[#9CA3AF]">
+        &copy; 2026 Ecosistema <strong>AyudaVenezuela</strong>. Iniciativa humanitaria sin fines de lucro.
+      </div>
+      
+    </div>
   </footer>
 
-  <!-- Carga de lógica de datos -->
+  <!-- Scripts CDNs y Lógica -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="config.js"></script>
   <script src="supabase.js"></script>
-  
+  <script src="app.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      // Intentar obtener las estadísticas desde Supabase
+    // Inicializar y cargar contador al cargar página
+    document.addEventListener("DOMContentLoaded", async () => {
       try {
-        if (typeof window.obtenerEstadisticas === 'function') {
-          const stats = await window.obtenerEstadisticas();
-          const counterEl = document.getElementById('total-counter');
-          
-          if (stats && stats.success) {
-            counterEl.innerHTML = `
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-              <span class="text-white text-base font-bold">${stats.total}</span> solicitudes activas ahora mismo
-            `;
+        initSupabase();
+        const stats = await obtenerEstadisticas();
+        const counterText = document.getElementById("counter-text");
+        if (counterText) {
+          if (stats && typeof stats.total !== 'undefined') {
+            counterText.innerHTML = `<strong>${stats.total}</strong> solicitudes activas en el mapa`;
           } else {
-            // Mostrar 0 si no hay solicitudes activas o falla
-            counterEl.innerHTML = `
-              <span class="w-2.5 h-2.5 rounded-full bg-venezuela-muted inline-block"></span>
-              Conexión activa sin reportes pendientes
-            `;
+            counterText.innerHTML = `Conexión activa con Supabase`;
           }
         }
       } catch (err) {
-        console.error('Error al cargar estadísticas en landing:', err);
-        const counterEl = document.getElementById('total-counter');
-        counterEl.innerHTML = `
-          <span class="w-2.5 h-2.5 rounded-full bg-yellow-500 inline-block"></span>
-          Modo offline (conecta internet para sincronizar)
-        `;
+        console.error("Error al cargar estadísticas en landing:", err);
+        const counterText = document.getElementById("counter-text");
+        if (counterText) {
+          counterText.innerText = "Plataforma de emergencia activa";
+        }
       }
     });
   </script>

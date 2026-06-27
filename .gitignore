@@ -1,8 +1,16 @@
+# Credenciales locales de Supabase
 config.js
-.env
-.env.local
-node_modules/
+
+# Archivos del sistema y de Gemini/Antigravity
+.agents/
+.gemini/
 .DS_Store
-*.log
-.vercel
-backup_temp/
+Thumbs.db
+
+# Logs y dependencias
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+dist/
+build/
