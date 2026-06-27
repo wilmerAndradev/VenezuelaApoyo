@@ -405,3 +405,148 @@ function actualizarColorPinSolicitud(gravedad) {
   
   marcadorSolicitud.setIcon(newPinIcon);
 }
+
+// ===========================================================
+//   INTEGRACIÓN: Venezuela Reporta API  (api/v1/sitios)
+// ===========================================================
+
+let grupoSitiosExternos = null;
+let sitiosExternosVisibles = false;
+let sitiosExternosCache = [];
+
+const VR_SITIO_COLORS = {
+  hospital: '#7C3AED',
+  clinica:  '#8B5CF6',
+  acopio:   '#0891B2',
+  refugio:  '#0D9488'
+};
+
+const VR_SITIO_ICONS = {
+  hospital: `<path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 00-1-1h-2a1 1 0 00-1 1v5m4 0H9"/>`,
+  clinica:  `<path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>`,
+  acopio:   `<path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>`,
+  refugio:  `<path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>`
+};
+
+/**
+ * Carga los sitios de VenezuelaReporta en el mapa como capa separada.
+ * Retorna el número de sitios cargados.
+ * @param {L.Map} mapInstance - Instancia del mapa Leaflet del dashboard
+ */
+async function cargarSitiosExternos(mapInstance) {
+  if (!mapInstance) return 0;
+
+  try {
+    const resp = await fetch('https://venezuelareporta.org/api/v1/sitios', {
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+
+    if (!data.ok || !Array.isArray(data.sitios)) return 0;
+    sitiosExternosCache = data.sitios;
+
+    // Crear grupo de marcadores para esta capa
+    grupoSitiosExternos = L.featureGroup();
+
+    data.sitios.forEach(sitio => {
+      const lat = parseFloat(sitio.lat);
+      const lng = parseFloat(sitio.lng);
+      if (isNaN(lat) || isNaN(lng)) return;
+
+      const tipo   = (sitio.tipo || 'acopio').toLowerCase();
+      const color  = VR_SITIO_COLORS[tipo] || '#6B7280';
+      const svgPath = VR_SITIO_ICONS[tipo] || VR_SITIO_ICONS['acopio'];
+
+      const icon = L.divIcon({
+        className: '',
+        html: `<div style="
+            background:${color};
+            width:34px;height:34px;border-radius:8px;
+            border:2.5px solid white;
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 3px 10px rgba(0,0,0,0.25);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+               stroke="white" stroke-width="2.5" stroke-linecap="round"
+               stroke-linejoin="round">${svgPath}</svg>
+        </div>`,
+        iconSize:   [34, 34],
+        iconAnchor: [17, 34]
+      });
+
+      // Badges de estado
+      const estadoBadges = {
+        activo:  `<span style="background:#22C55E;color:#fff;padding:2px 9px;border-radius:999px;font-size:10px;font-weight:700">ACTIVO</span>`,
+        lleno:   `<span style="background:#F59E0B;color:#1A1A1A;padding:2px 9px;border-radius:999px;font-size:10px;font-weight:700">LLENO</span>`,
+        cerrado: `<span style="background:#6B7280;color:#fff;padding:2px 9px;border-radius:999px;font-size:10px;font-weight:700">CERRADO</span>`
+      };
+      const estadoBadge = estadoBadges[(sitio.estado || 'activo').toLowerCase()] || estadoBadges.activo;
+      const nombreSitio = typeof sanitizeHTML !== 'undefined'
+        ? sanitizeHTML(sitio.nombre || 'Sin nombre')
+        : (sitio.nombre || 'Sin nombre');
+      const tipoLabel = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+
+      const popupHtml = `
+        <div style="font-family:Inter,sans-serif;padding:4px;max-width:230px">
+          <div style="display:flex;align-items:center;justify-content:space-between;
+                      margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #E2E8F0">
+            <span style="font-size:10px;color:${color};font-weight:700;
+                         text-transform:uppercase;letter-spacing:.04em">${tipoLabel}</span>
+            ${estadoBadge}
+          </div>
+          <h4 style="font-size:13px;font-weight:700;color:#0F172A;margin:0 0 3px">${nombreSitio}</h4>
+          ${sitio.direccion ? `<p style="font-size:11px;color:#475569;margin:2px 0">${sitio.direccion}</p>` : ''}
+          ${sitio.ciudad    ? `<p style="font-size:11px;color:#94A3B8;margin:2px 0">${sitio.ciudad}</p>`    : ''}
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank"
+             style="display:flex;align-items:center;gap:6px;margin-top:10px;
+                    background:#003087;color:white;padding:7px 12px;border-radius:8px;
+                    font-size:11px;font-weight:700;text-decoration:none">
+            🚙 Cómo Llegar
+          </a>
+          <div style="font-size:10px;color:#94A3B8;margin-top:8px;padding-top:6px;
+                      border-top:1px solid #E2E8F0;text-align:right">
+            Fuente: <a href="https://venezuelareporta.org" target="_blank"
+                       style="color:#003087;font-weight:600">Venezuela Reporta</a>
+          </div>
+        </div>`;
+
+      const marker = L.marker([lat, lng], { icon });
+      marker.bindPopup(popupHtml, { maxWidth: 250 });
+      grupoSitiosExternos.addLayer(marker);
+    });
+
+    mapInstance.addLayer(grupoSitiosExternos);
+    sitiosExternosVisibles = true;
+
+    return data.sitios.length;
+
+  } catch (err) {
+    console.warn('[VenezuelaReporta] Error cargando sitios:', err);
+    return 0;
+  }
+}
+
+/**
+ * Alterna la visibilidad de la capa de sitios de VenezuelaReporta
+ * @returns {boolean} Nuevo estado de visibilidad
+ */
+function toggleCapaSitios() {
+  if (!grupoSitiosExternos || !mapaDashboardInstance) return false;
+  if (sitiosExternosVisibles) {
+    mapaDashboardInstance.removeLayer(grupoSitiosExternos);
+    sitiosExternosVisibles = false;
+  } else {
+    mapaDashboardInstance.addLayer(grupoSitiosExternos);
+    sitiosExternosVisibles = true;
+  }
+  return sitiosExternosVisibles;
+}
+
+/**
+ * Retorna el array de sitios externos cargados (para uso en la UI)
+ */
+function getSitiosExternosCache() {
+  return sitiosExternosCache;
+}
+
