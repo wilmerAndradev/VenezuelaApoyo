@@ -929,11 +929,46 @@
         window.scrollTo({ top: 120, behavior: 'smooth' });
       };
 
+      // Botón Marcar Realizado en el modal
+      const btnResolver = document.getElementById('btn-modal-resolver');
+      if (btnResolver) {
+        btnResolver.onclick = async () => {
+          cerrarModalDetalle();
+          await resolverSolicitud(id);
+        };
+      }
+
       document.getElementById('modal-detalle').classList.remove('hidden');
     }
 
     function cerrarModalDetalle() {
       document.getElementById('modal-detalle').classList.add('hidden');
+    }
+
+    /**
+     * Marca una solicitud como realizada/resuelta en Supabase y la retira de la visualización
+     */
+    async function resolverSolicitud(id) {
+      if (!confirm('¿Marcar esta solicitud como realizada/resuelta? Se quitará de la lista activa.')) {
+        return;
+      }
+      try {
+        await marcarResuelta(id);
+        
+        // Quitar de las listas locales
+        todasLasSolicitudes = todasLasSolicitudes.filter(x => x.id !== id);
+        solicitudesFiltradas = solicitudesFiltradas.filter(x => x.id !== id);
+        
+        // Actualizar marcadores en mapa y tarjetas
+        actualizarMarcadores(solicitudesFiltradas);
+        renderListaCards(solicitudesFiltradas);
+        
+        // Actualizar métricas del header y mobile
+        await cargarMetricas();
+      } catch (err) {
+        console.error("Error al resolver la solicitud:", err);
+        alert("No se pudo completar la operación. Por favor intenta de nuevo.");
+      }
     }
 
     /**
